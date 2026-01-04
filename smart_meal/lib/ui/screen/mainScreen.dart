@@ -62,15 +62,15 @@ class _MainScreenState extends State<MainScreen> {
           showUnselectedLabels: true,
           items: const [
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
+              icon: Icon(Icons.home_rounded),
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.list),
+              icon: Icon(Icons.food_bank_rounded),
               label: 'List Food',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.add_circle_outline),
+              icon: Icon(Icons.add_circle_rounded),
               label: 'Add Food',
             ),
             BottomNavigationBarItem(
