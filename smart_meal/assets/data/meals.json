@@ -1,0 +1,88 @@
+[
+  {
+    "id": "WE001",
+    "name": "French Fries",
+    "description": "Crispy deep-fried potato strips.",
+    "image": "assets/image/frenchFries.jpg",
+    "category": 1,
+    "nutrition": {
+      "calories": 365,
+      "protein": 4.0,
+      "sugar": 0.3,
+      "fat": 17.0,
+      "vegetables": false
+    },
+    "ingredients": [
+      "Potatoes",
+      "Cooking oil",
+      "Salt"
+    ],
+    "cookingInstructions": "Peel potatoes, cut into strips, deep fry until golden, and season with salt."
+  },
+  {
+    "id": "KH001",
+    "name": "Fried Rice",
+    "description": "Khmer-style fried rice with egg and vegetables.",
+    "image": "assets/image/friedRice.jpg",
+    "category": 0,
+    "nutrition": {
+      "calories": 520,
+      "protein": 14.0,
+      "sugar": 3.5,
+      "fat": 12.0,
+      "vegetables": true
+    },
+    "ingredients": [
+      "Rice",
+      "Egg",
+      "Garlic",
+      "Carrot",
+      "Soy sauce"
+    ],
+    "cookingInstructions": "Stir-fry garlic, add egg, rice, vegetables, and season with soy sauce."
+  },
+  {
+    "id": "WE002",
+    "name": "Salad",
+    "description": "Fresh vegetable salad with light dressing.",
+    "image": "assets/image/salad.jpg",
+    "category": 1,
+    "nutrition": {
+      "calories": 220,
+      "protein": 6.0,
+      "sugar": 4.0,
+      "fat": 9.0,
+      "vegetables": true
+    },
+    "ingredients": [
+      "Lettuce",
+      "Tomato",
+      "Corn",
+      "Cucumber",
+      "Olive oil"
+    ],
+    "cookingInstructions": "Chop vegetables, mix together, and drizzle with olive oil."
+  },
+  {
+    "id": "DE001",
+    "name": "Chocolate Cake",
+    "description": "Rich chocolate dessert cake.",
+    "image": "assets/image/chocolatecake.jpg",
+    "category": 2,
+    "nutrition": {
+      "calories": 450,
+      "protein": 6.5,
+      "sugar": 38.0,
+      "fat": 22.0,
+      "vegetables": false
+    },
+    "ingredients": [
+      "Flour",
+      "Cocoa powder",
+      "Sugar",
+      "Egg",
+      "Butter"
+    ],
+    "cookingInstructions": "Mix ingredients, bake in oven at 180°C for 35 minutes."
+  }
+]
