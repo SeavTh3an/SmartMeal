@@ -87,7 +87,7 @@ SliverToBoxAdapter(
       children: [
         CategoryCard(
           title: 'All',
-          imagePath: 'assets/image/category_image/all.jpg',
+          imagePath: 'assets/image/category_image/all.png',
           small: true,
           onTap: () {
             setState(() {

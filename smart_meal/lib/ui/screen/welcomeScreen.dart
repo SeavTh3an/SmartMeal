@@ -1,7 +1,50 @@
 import 'package:flutter/material.dart';
 
-class WelcomeScreen extends StatelessWidget {
+class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
+
+  @override
+  State<WelcomeScreen> createState() => _WelcomeScreenState();
+}
+
+class _WelcomeScreenState extends State<WelcomeScreen>
+    with SingleTickerProviderStateMixin {
+  // Animation controller for fade in effect
+  late final AnimationController _controller;
+  late final Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Initialize animation controller (1 second duration)
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+    );
+
+    // Fade animation from 0 (transparent) to 1 (fully visible)
+    _fadeAnimation = Tween<double>(begin: 0, end: 1).animate(_controller);
+
+    // Start the fade in animation
+    _controller.forward();
+
+    // Auto navigate after 2 seconds
+    Future.delayed(const Duration(seconds: 2), () {
+      //Check if the widget is still in the tree
+      if (!mounted) return;
+
+      // Navigate to main screen
+      Navigator.pushReplacementNamed(context, '/main');
+    });
+  }
+
+  @override
+  void dispose() {
+    // Dispose animation controller to free resources
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -10,6 +53,7 @@ class WelcomeScreen extends StatelessWidget {
         width: double.infinity,
         height: double.infinity,
         decoration: const BoxDecoration(
+          // Gradient background
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -19,57 +63,15 @@ class WelcomeScreen extends StatelessWidget {
             ],
           ),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // APP NAME
-            const Text(
-              'SmartMeal',
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
+        // Centered content
+        child: Center(
+          child: FadeTransition(
+            opacity: _fadeAnimation,
+            child: Image.asset(
+              'assets/image/logo.png', 
+              width: 350,
             ),
-
-            const SizedBox(height: 10),
-
-            // TAGLINE
-            const Text(
-              'Food & Dessert',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.white70,
-              ),
-            ),
-
-            const SizedBox(height: 40),
-
-            // START BUTTON
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushReplacementNamed(context, '/main');
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: const Color(0xFF264016),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 40,
-                  vertical: 14,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-              ),
-              child: const Text(
-                'Start',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
