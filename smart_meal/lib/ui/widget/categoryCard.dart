@@ -3,45 +3,56 @@ import 'package:flutter/material.dart';
 class CategoryCard extends StatelessWidget {
   final String title;
   final String imagePath;
+  final bool small;
+  final VoidCallback? onTap;
 
   const CategoryCard({
     super.key,
     required this.title,
     required this.imagePath,
+    this.small = false,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFFCBF4B1),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // CATEGORY IMAGE
-          ClipRRect(
-            borderRadius: BorderRadius.circular(40),
-            child: Image.asset(
-              imagePath,
-              width: 80,
-              height: 80,
-              fit: BoxFit.cover,
-            ),
-          ),
+    final double imageSize = small ? 40 : 80;
+    final double fontSize = small ? 12 : 16;
+    final double radius = small ? 14 : 20;
 
-          const SizedBox(height: 12),
-
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF264016),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.all(small ? 8 : 0),
+        decoration: BoxDecoration(
+          color: const Color(0xFFCBF4B1),
+          borderRadius: BorderRadius.circular(radius),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(imageSize),
+              child: Image.asset(
+                imagePath,
+                width: imageSize,
+                height: imageSize,
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-        ],
+
+            const SizedBox(height: 6),
+
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: fontSize,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFF264016),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
