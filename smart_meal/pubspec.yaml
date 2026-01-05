@@ -58,6 +58,7 @@ flutter:
     - assets/image/chocolatecake.jpg
     - assets/image/frenchFries.jpg
     - assets/image/salad.jpg
+    - assets/image/category_image/
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
