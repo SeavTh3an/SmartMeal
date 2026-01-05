@@ -39,8 +39,8 @@ class _ListfoodCardState extends State<ListfoodCard> {
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
-        childAspectRatio: 0.72,
+        mainAxisSpacing: 10,
+        childAspectRatio: 0.8,
       ),
       itemBuilder: (context, index) {
         final meal = meals[index];
@@ -62,18 +62,20 @@ class _ListfoodCardState extends State<ListfoodCard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               /// IMAGE
-              ClipRRect(
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(20),
-                ),
-                child: Image.asset(
-                  meal.image,
-                  height: 120,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
+              Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: Center(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: Image.asset(
+                      meal.image,
+                      height: 130,
+                      width: 200,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
               ),
-
               Padding(
                 padding: const EdgeInsets.all(12),
                 child: Column(
@@ -120,7 +122,7 @@ class _ListfoodCardState extends State<ListfoodCard> {
                       ),
                     ),
 
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 20),
 
                     /// VIEW DETAIL BUTTON
                     SizedBox(
@@ -150,53 +152,7 @@ class _ListfoodCardState extends State<ListfoodCard> {
     );
   }
 
-  /// ---------- DETAIL DIALOG ----------
   void _showMealDetail(BuildContext context, Meal meal) {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: Text(meal.name),
-        content: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _infoRow('Calories', '${meal.nutrition.calories} kcal'),
-              _infoRow('Protein', '${meal.nutrition.protein} g'),
-              _infoRow('Sugar', '${meal.nutrition.sugar} g'),
-              _infoRow('Fat', '${meal.nutrition.fat} g'),
-              _infoRow(
-                'Vegetables',
-                meal.nutrition.vegetables ? 'Yes' : 'No',
-              ),
-              const SizedBox(height: 12),
-              const Text(
-                'Ingredients',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              Text(meal.ingredients.join(', ')),
-              const SizedBox(height: 12),
-              const Text(
-                'Cooking Instructions',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              Text(meal.cookingInstructions),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
-          ),
-        ],
-      ),
-    );
   }
 
-  Widget _infoRow(String title, String value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 4),
-      child: Text('$title: $value'),
-    );
-  }
 }
