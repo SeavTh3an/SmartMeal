@@ -3,7 +3,7 @@
     "id": "WE001",
     "name": "French Fries",
     "description": "Crispy deep-fried potato strips.",
-    "image": "assets/image/frenchFries.jpg",
+    "image": "assets/image/western_img/frenchFries.jpg",
     "category": 1,
     "nutrition": {
       "calories": 365,
@@ -23,7 +23,7 @@
     "id": "KH001",
     "name": "Fried Rice",
     "description": "Khmer-style fried rice with egg and vegetables.",
-    "image": "assets/image/friedRice.jpg",
+    "image": "assets/image/khmer_img/friedRice.jpg",
     "category": 0,
     "nutrition": {
       "calories": 520,
@@ -45,7 +45,7 @@
     "id": "WE002",
     "name": "Salad",
     "description": "Fresh vegetable salad with light dressing.",
-    "image": "assets/image/salad.jpg",
+    "image": "assets/image/western_img/salad.jpg",
     "category": 1,
     "nutrition": {
       "calories": 220,
@@ -67,7 +67,7 @@
     "id": "DE001",
     "name": "Chocolate Cake",
     "description": "Rich chocolate dessert cake.",
-    "image": "assets/image/chocolatecake.jpg",
+    "image": "assets/image/dessert_img/chocolatecake.jpg",
     "category": 2,
     "nutrition": {
       "calories": 450,
