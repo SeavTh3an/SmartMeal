@@ -1,39 +1,23 @@
 import 'package:flutter/material.dart';
 import '../../model/meal.dart';
-import '../../data/meal_loader.dart';
 
-class ListfoodCard extends StatefulWidget {
-  const ListfoodCard({super.key, required List<Meal> meals});
+class ListfoodCard extends StatelessWidget {
+  final List<Meal> meals;
 
-  @override
-  State<ListfoodCard> createState() => _ListfoodCardState();
-}
-
-class _ListfoodCardState extends State<ListfoodCard> {
-  List<Meal> meals = [];
-  bool isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    loadMeals();
-  }
-
-  Future<void> loadMeals() async {
-    final loadedMeals = await MealLoader.loadMeals();
-    setState(() {
-      meals = loadedMeals;
-      isLoading = false;
-    });
-  }
+  const ListfoodCard({
+    super.key,
+    required this.meals,
+  });
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading) {
-      return const Center(child: CircularProgressIndicator());
+    if (meals.isEmpty) {
+      return const Center(child: Text("No meals available."));
     }
 
     return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       padding: const EdgeInsets.all(16),
       itemCount: meals.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -76,6 +60,7 @@ class _ListfoodCardState extends State<ListfoodCard> {
                   ),
                 ),
               ),
+
               Padding(
                 padding: const EdgeInsets.all(12),
                 child: Column(
@@ -153,6 +138,6 @@ class _ListfoodCardState extends State<ListfoodCard> {
   }
 
   void _showMealDetail(BuildContext context, Meal meal) {
+    // Navigator.push(...) later
   }
-
 }

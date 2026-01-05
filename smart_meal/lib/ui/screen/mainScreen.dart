@@ -1,19 +1,28 @@
 import 'package:flutter/material.dart';
+
 import 'homeScreen.dart';
 import 'listfoodScreen.dart';
 import 'addfoodScreen.dart';
 import 'selectedfoodScreen.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({Key? key}) : super(key: key);
+  const MainScreen({super.key});
+
+  /// Allow child screens to change bottom navigation index
+  static _MainScreenState of(BuildContext context) {
+    final state = context.findAncestorStateOfType<_MainScreenState>();
+    assert(state != null, 'MainScreen not found in widget tree');
+    return state!;
+  }
 
   @override
-  _MainScreenState createState() => _MainScreenState();
+  State<MainScreen> createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
 
+  // Screens controlled ONLY by index
   final List<Widget> _screens = const [
     HomeScreen(),
     ListFoodScreen(),
@@ -23,10 +32,13 @@ class _MainScreenState extends State<MainScreen> {
 
   // 🎨 Colors
   static const Color navBgColor = Color(0xFFCBF4B1);
-  static const Color selectedColor = Color(0xFF2E7D32); // dark green
+  static const Color selectedColor = Color(0xFF2E7D32);
   static const Color unselectedColor = Color(0xFF5F6F52);
 
-  void _onTabTapped(int index) {
+  /// Called by bottom nav OR top menu
+  void changeTab(int index) {
+    if (index == _currentIndex) return;
+
     setState(() {
       _currentIndex = index;
     });
@@ -36,7 +48,10 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: _screens[_currentIndex],
+        child: IndexedStack(
+          index: _currentIndex,
+          children: _screens,
+        ),
       ),
 
       bottomNavigationBar: Container(
@@ -53,7 +68,7 @@ class _MainScreenState extends State<MainScreen> {
         child: BottomNavigationBar(
           backgroundColor: navBgColor,
           currentIndex: _currentIndex,
-          onTap: _onTabTapped,
+          onTap: changeTab,
           type: BottomNavigationBarType.fixed,
           selectedItemColor: selectedColor,
           unselectedItemColor: unselectedColor,
