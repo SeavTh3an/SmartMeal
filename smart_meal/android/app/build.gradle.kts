@@ -9,7 +9,7 @@ android {
     namespace = "com.example.smart_meal"
 
     // 🔧 FIX: set explicit SDK versions
-    compileSdk = 34
+    compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
