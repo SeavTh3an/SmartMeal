@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class CurvedHeader extends StatelessWidget {
   final Widget? child;
   final VoidCallback? onMenuTap;
+  final String? title;
 
   const CurvedHeader({
     super.key,
     this.child,
     this.onMenuTap,
+    this.title,
   });
 
   @override
@@ -30,9 +32,31 @@ class CurvedHeader extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                IconButton(
-                  icon: const Icon(Icons.menu),
-                  onPressed: onMenuTap,
+                // Top row: menu button at left, centered title
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: IconButton(
+                        icon: const Icon(Icons.menu),
+                        color: Colors.white,
+                        onPressed: onMenuTap,
+                      ),
+                    ),
+                    if (title != null)
+                      Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          title!,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
                 if (child != null) child!,
               ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_meal/model/meal.dart';
 
 import 'homeScreen.dart';
 import 'listfoodScreen.dart';
@@ -22,25 +23,38 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
 
-  // Screens controlled ONLY by index
+  // ✅ FIXED (no static)
+  final List<Meal> selectedMeals = [];
+
+  List<Meal> get selectedMealsList => selectedMeals;
+
   final List<Widget> _screens = const [
     HomeScreen(),
     ListFoodScreen(),
     AddFoodScreen(),
     SelectedFoodScreen(),
   ];
-
-  // 🎨 Colors
+    // 🎨 Colors
   static const Color navBgColor = Color(0xFFCBF4B1);
   static const Color selectedColor = Color(0xFF2E7D32);
   static const Color unselectedColor = Color(0xFF5F6F52);
 
-  /// Called by bottom nav OR top menu
   void changeTab(int index) {
     if (index == _currentIndex) return;
+    setState(() => _currentIndex = index);
+  }
 
+  void addSelectedMeal(Meal meal) {
+    if (!selectedMeals.contains(meal)) {
+      setState(() {
+        selectedMeals.add(meal);
+      });
+    }
+  }
+
+  void removeSelectedMeal(Meal meal) {
     setState(() {
-      _currentIndex = index;
+      selectedMeals.remove(meal);
     });
   }
 
@@ -54,6 +68,7 @@ class _MainScreenState extends State<MainScreen> {
         ),
       ),
 
+      /// ⛔ NAV BAR UI NOT CHANGED ⛔
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(
           color: navBgColor,

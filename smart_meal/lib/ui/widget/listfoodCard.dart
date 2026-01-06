@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../model/meal.dart';
-
+import '../screen/mealDetail.dart';
+import '../screen/mainScreen.dart';
 class ListfoodCard extends StatelessWidget {
   final List<Meal> meals;
 
@@ -24,7 +25,7 @@ class ListfoodCard extends StatelessWidget {
         crossAxisCount: 2,
         crossAxisSpacing: 16,
         mainAxisSpacing: 10,
-        childAspectRatio: 0.8,
+        childAspectRatio: 0.6,
       ),
       itemBuilder: (context, index) {
         final meal = meals[index];
@@ -54,7 +55,7 @@ class ListfoodCard extends StatelessWidget {
                     child: Image.asset(
                       meal.image,
                       height: 130,
-                      width: 200,
+                      width: 150,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -107,7 +108,7 @@ class ListfoodCard extends StatelessWidget {
                       ),
                     ),
 
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 12),
 
                     /// VIEW DETAIL BUTTON
                     SizedBox(
@@ -137,7 +138,13 @@ class ListfoodCard extends StatelessWidget {
     );
   }
 
-  void _showMealDetail(BuildContext context, Meal meal) {
-    // Navigator.push(...) later
-  }
+void _showMealDetail(BuildContext context, Meal meal) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (_) => MealDetailScreen(meal: meal),
+    ),
+  );
+}
+
 }

@@ -18,7 +18,6 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => WelcomeScreen(),
         '/main': (context) => MainScreen(),
-        '/mealDetail': (context) => MealDetail(),
       },
     );
   }
