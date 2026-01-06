@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../model/meal.dart';
-import '../widget/curveHead.dart';
+import '../widget/header/curveHead.dart';
 import '../widget/topNavigation.dart';
 import '../widget/categoryCard.dart';
 import '../widget/listfoodCard.dart';
@@ -14,7 +14,6 @@ class SelectedFoodScreen extends StatefulWidget {
 }
 
 class _SelectedFoodScreenState extends State<SelectedFoodScreen> {
-
   void _openTopMenu() {
     showModalBottomSheet(
       context: context,
@@ -32,12 +31,12 @@ class _SelectedFoodScreenState extends State<SelectedFoodScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final selectedMeals = MainScreen.of(context).selectedMealsList;
+    final List<Meal> selectedMeals = MainScreen.of(context).selectedMealsList;
 
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          /// HEADER
+          // CURVED HEADER
           SliverToBoxAdapter(
             child: CurvedHeader(
               onMenuTap: _openTopMenu,
@@ -45,7 +44,7 @@ class _SelectedFoodScreenState extends State<SelectedFoodScreen> {
             ),
           ),
 
-          /// CATEGORY BAR (UNCHANGED)
+          //CATEGORY FILTER
           SliverToBoxAdapter(
             child: SizedBox(
               height: 90,
@@ -58,7 +57,7 @@ class _SelectedFoodScreenState extends State<SelectedFoodScreen> {
                     imagePath: 'assets/image/category_image/all.png',
                     small: true,
                     onTap: () {
-                      setState(() {});
+                      setState(() {}); // refresh for all
                     },
                   ),
                   const SizedBox(width: 12),
@@ -84,7 +83,7 @@ class _SelectedFoodScreenState extends State<SelectedFoodScreen> {
             ),
           ),
 
-          /// SELECTED MEALS GRID
+          // SELECTED MEALS LIST
           SliverPadding(
             padding: const EdgeInsets.only(bottom: 16),
             sliver: SliverToBoxAdapter(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widget/categoryCard.dart';
+import '../widget/header/homeHeader.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -8,46 +9,58 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 40),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Home header with food image
+          const HomeHeader(
+            title: 'What should you cook today?',
+            imagePath: 'assets/image/western_img/salad_header.png', 
+          ),
 
-            const Text(
+          // Title above category grid (black)
+          const Padding(
+            padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
+            child: Text(
               'Choose Your Fav Category\nFor Today!',
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 18,
+                color: Colors.black,
                 fontWeight: FontWeight.bold,
               ),
             ),
+          ),
 
-            const SizedBox(height: 20),
-
-            Expanded(
+          // Category Grid
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: GridView.count(
                 crossAxisCount: 2,
                 mainAxisSpacing: 16,
                 crossAxisSpacing: 16,
+                childAspectRatio: 0.85,
                 children: const [
                   CategoryCard(
                     title: 'Khmer',
-                    imagePath: 'assets/image/category_image/prohok_rmbg.png',
+                    imagePath:
+                        'assets/image/category_image/prohok_rmbg.png',
                   ),
                   CategoryCard(
                     title: 'Western',
-                    imagePath: 'assets/image/category_image/steak_rmbg.png',
+                    imagePath:
+                        'assets/image/category_image/steak_rmbg.png',
                   ),
                   CategoryCard(
                     title: 'Dessert',
-                    imagePath: 'assets/image/category_image/dessert_rmbg.png',
+                    imagePath:
+                        'assets/image/category_image/dessert_rmbg.png',
                   ),
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
