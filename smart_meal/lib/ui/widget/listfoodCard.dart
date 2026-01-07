@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../model/meal.dart';
 import '../screen/mealDetail.dart';
+import '../screen/mainScreen.dart';
+
 class ListfoodCard extends StatelessWidget {
   final List<Meal> meals;
 
-  const ListfoodCard({
-    super.key,
-    required this.meals,
-  });
+  const ListfoodCard({super.key, required this.meals});
 
   @override
   Widget build(BuildContext context) {
@@ -101,8 +100,8 @@ class ListfoodCard extends StatelessWidget {
                           score < 0.4
                               ? Colors.orange
                               : score < 0.7
-                                  ? Colors.yellow
-                                  : Colors.green,
+                              ? Colors.yellow
+                              : Colors.green,
                         ),
                       ),
                     ),
@@ -137,13 +136,15 @@ class ListfoodCard extends StatelessWidget {
     );
   }
 
-void _showMealDetail(BuildContext context, Meal meal) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (_) => MealDetailScreen(meal: meal),
-    ),
-  );
-}
+  void _showMealDetail(BuildContext context, Meal meal) async {
+    final selected = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => MealDetailScreen(meal: meal)),
+    );
 
+    if (selected == true) {
+      MainScreen.of(context).addSelectedMeal(meal);
+      MainScreen.of(context).changeTab(3);
+    }
+  }
 }

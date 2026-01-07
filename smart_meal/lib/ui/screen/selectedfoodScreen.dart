@@ -6,14 +6,26 @@ import '../widget/categoryCard.dart';
 import '../widget/listfoodCard.dart';
 import 'mainScreen.dart';
 
+
 class SelectedFoodScreen extends StatefulWidget {
   const SelectedFoodScreen({super.key});
 
   @override
-  State<SelectedFoodScreen> createState() => _SelectedFoodScreenState();
+  State<SelectedFoodScreen> createState() => SelectedFoodScreenState();
 }
 
-class _SelectedFoodScreenState extends State<SelectedFoodScreen> {
+class SelectedFoodScreenState extends State<SelectedFoodScreen> {
+  @override
+void didChangeDependencies() {
+  super.didChangeDependencies();
+  // This runs whenever the widget is rebuilt
+  setState(() {}); // forces rebuild to show latest selected meals
+}
+void refresh() {
+  setState(() {});
+}
+
+
   void _openTopMenu() {
     showModalBottomSheet(
       context: context,

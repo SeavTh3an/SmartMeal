@@ -6,6 +6,10 @@ import 'listfoodScreen.dart';
 import 'addfoodScreen.dart';
 import 'selectedfoodScreen.dart';
 
+final GlobalKey<SelectedFoodScreenState> selectedFoodKey =
+    GlobalKey<SelectedFoodScreenState>();
+
+
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
@@ -24,6 +28,7 @@ class _MainScreenState extends State<MainScreen> {
   Category? selectedCategory;
 
   final List<Meal> selectedMeals = [];
+  
 
   List<Meal> get selectedMealsList => selectedMeals;
 
@@ -31,6 +36,11 @@ class _MainScreenState extends State<MainScreen> {
     setState(() {
       _currentIndex = index;
       if (index != 1) selectedCategory = null; // reset category when leaving list food
+
+      if (index == 3) {
+        // Get the SelectedFoodScreen state and refresh
+
+      }
     });
   }
 
@@ -43,8 +53,11 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void addSelectedMeal(Meal meal) {
-    if (!selectedMeals.contains(meal)) selectedMeals.add(meal);
-    setState(() {});
+    if (!selectedMeals.contains(meal)) {
+    selectedMeals.add(meal);
+  }
+  // 🔥 FORCE SelectedFoodScreen rebuild
+  selectedFoodKey.currentState?.refresh();
   }
 
   void removeSelectedMeal(Meal meal) {
@@ -61,7 +74,7 @@ class _MainScreenState extends State<MainScreen> {
           const HomeScreen(),
           ListFoodScreen(initialCategory: selectedCategory),
           const AddFoodScreen(),
-          const SelectedFoodScreen(),
+          SelectedFoodScreen(key: selectedFoodKey),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

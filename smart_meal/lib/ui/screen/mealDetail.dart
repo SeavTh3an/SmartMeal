@@ -258,16 +258,10 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {
-                        // Add the meal to selected meals
-                        MainScreen.of(context).addSelectedMeal(widget.meal);
-
-                        // Pop back to MainScreen first
-                        Navigator.pop(context);
-
-                        // Switch to Selected tab after a tiny delay
-                        Future.delayed(const Duration(milliseconds: 50), () {
-                          MainScreen.of(context).changeTab(3);
-                        });
+                        Navigator.pop(
+                          context,
+                          true,
+                        ); // signal selection to caller
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF6FA55A),
