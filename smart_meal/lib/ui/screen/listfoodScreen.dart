@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-
 import '../../data/meal_loader.dart';
 import '../../model/meal.dart';
 import '../widget/categoryCard.dart';
 import '../widget/listfoodCard.dart';
 import '../widget/header/curveHead.dart';
 import '../widget/searchbar.dart';
-import '../widget/topNavigation.dart';
-import 'mainScreen.dart';
 
 class ListFoodScreen extends StatefulWidget {
-  const ListFoodScreen({super.key});
+  final Category? initialCategory;
+
+  const ListFoodScreen({super.key, this.initialCategory});
 
   @override
   State<ListFoodScreen> createState() => _ListFoodScreenState();
@@ -20,25 +19,50 @@ class _ListFoodScreenState extends State<ListFoodScreen> {
   List<Meal> allMeals = [];
   List<Meal> filteredMeals = [];
   bool isLoading = true;
+  Category? selectedCategory;
 
   @override
   void initState() {
     super.initState();
+    selectedCategory = widget.initialCategory;
     _loadMeals();
+  }
+
+  @override
+  void didUpdateWidget(covariant ListFoodScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.initialCategory != widget.initialCategory) {
+      setState(() {
+        selectedCategory = widget.initialCategory;
+        _applyFilter();
+      });
+    }
   }
 
   Future<void> _loadMeals() async {
     final loadedMeals = await MealLoader.loadMeals();
     setState(() {
       allMeals = loadedMeals;
-      filteredMeals = loadedMeals;
+      _applyFilter();
       isLoading = false;
     });
   }
 
+  void _applyFilter() {
+    if (selectedCategory == null) {
+      filteredMeals = allMeals;
+    } else {
+      filteredMeals = allMeals
+          .where((meal) => meal.category == selectedCategory)
+          .toList();
+    }
+  }
+
   void _searchMeals(String query) {
     final result = allMeals.where((meal) {
-      return meal.name.toLowerCase().contains(query.toLowerCase());
+      final matchesCategory = selectedCategory == null || meal.category == selectedCategory;
+      final matchesName = meal.name.toLowerCase().contains(query.toLowerCase());
+      return matchesCategory && matchesName;
     }).toList();
 
     setState(() {
@@ -46,19 +70,11 @@ class _ListFoodScreenState extends State<ListFoodScreen> {
     });
   }
 
-  void _openTopMenu() {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      builder: (_) => TopMenuSheet(
-        currentIndex: 1, // ListFood tab index
-        onSelected: (index) {
-          MainScreen.of(context).changeTab(index);
-        },
-      ),
-    );
+  void _onCategoryTap(Category? category) {
+    setState(() {
+      selectedCategory = category;
+      _applyFilter();
+    });
   }
 
   @override
@@ -66,21 +82,16 @@ class _ListFoodScreenState extends State<ListFoodScreen> {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          // CURVED HEADER (scrolls)
           SliverToBoxAdapter(
             child: CurvedHeader(
-              onMenuTap: _openTopMenu,
               title: "Find Your Meal For Today!",
+              onMenuTap: () {},
               child: Padding(
                 padding: const EdgeInsets.only(top: 12),
-                child: SearchBarWidget(
-                  onChanged: _searchMeals,
-                ),
+                child: SearchBarWidget(onChanged: _searchMeals),
               ),
             ),
           ),
-
-          // CATEGORY FILTER 
           SliverToBoxAdapter(
             child: SizedBox(
               height: 90,
@@ -92,58 +103,47 @@ class _ListFoodScreenState extends State<ListFoodScreen> {
                     title: 'All',
                     imagePath: 'assets/image/category_image/all.png',
                     small: true,
-                    onTap: () {
-                      setState(() {
-                        filteredMeals = allMeals;
-                      });
-                    },
+                    onTap: () => _onCategoryTap(null),
                   ),
                   const SizedBox(width: 12),
                   CategoryCard(
                     title: 'Khmer',
                     imagePath: 'assets/image/category_image/prohok_rmbg.png',
                     small: true,
+                    onTap: () => _onCategoryTap(Category.khmerFood),
                   ),
                   const SizedBox(width: 12),
                   CategoryCard(
                     title: 'Western',
                     imagePath: 'assets/image/category_image/steak_rmbg.png',
                     small: true,
+                    onTap: () => _onCategoryTap(Category.westernFood),
                   ),
                   const SizedBox(width: 12),
                   CategoryCard(
                     title: 'Dessert',
                     imagePath: 'assets/image/category_image/dessert_rmbg.png',
                     small: true,
+                    onTap: () => _onCategoryTap(Category.dessert),
                   ),
                 ],
               ),
             ),
           ),
-
-          //TITLE
-          const SliverToBoxAdapter(
-            child: Padding(
+          SliverToBoxAdapter(
+            child: const Padding(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Text(
                 'Choose Your Meal For Today!',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
           ),
-
-          //MEAL LIST
           SliverPadding(
             padding: const EdgeInsets.only(bottom: 16),
             sliver: SliverToBoxAdapter(
               child: isLoading
-                  ? const Padding(
-                      padding: EdgeInsets.only(top: 40),
-                      child: Center(child: CircularProgressIndicator()),
-                    )
+                  ? const Center(child: CircularProgressIndicator())
                   : ListfoodCard(meals: filteredMeals),
             ),
           ),

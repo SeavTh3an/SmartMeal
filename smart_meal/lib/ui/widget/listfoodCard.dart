@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../model/meal.dart';
 import '../screen/mealDetail.dart';
-import '../screen/mainScreen.dart';
 class ListfoodCard extends StatelessWidget {
   final List<Meal> meals;
 

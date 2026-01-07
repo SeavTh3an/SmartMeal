@@ -15,7 +15,7 @@ class HomeHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 280, 
+      height: 200, 
       child: Stack(
         clipBehavior: Clip.none,
         children: [
@@ -23,7 +23,7 @@ class HomeHeader extends StatelessWidget {
           ClipPath(
             clipper: HomeWaveClipper(),
             child: Container(
-              height: 250, 
+              height: 200, 
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   colors: [Color(0xFFCBF4B1), Color(0xFF608D43)],
@@ -47,7 +47,7 @@ class HomeHeader extends StatelessWidget {
           // Title 
           Positioned(
             top: 80,
-            left: 80,
+            left: 50,
             child: Text(
               title,
               style: const TextStyle(
@@ -60,11 +60,11 @@ class HomeHeader extends StatelessWidget {
 
           // Food image 
           Positioned(
-            bottom: 0,
+            top: 30,
             right: 16, 
             child: Image.asset(
               imagePath,
-              width: 180,
+              width: 150,
               fit: BoxFit.contain,
             ),
           ),
