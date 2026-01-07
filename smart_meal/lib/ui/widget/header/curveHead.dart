@@ -25,7 +25,6 @@ class CurvedHeader extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Menu button + title
               Stack(
                 alignment: Alignment.center,
                 children: [
@@ -65,11 +64,9 @@ class _CurvedHeaderClipper extends CustomClipper<Path> {
   Path getClip(Size size) {
     final path = Path();
 
-    // Start top-left
     path.moveTo(0, 0);
     path.lineTo(0, size.height - 30); // left bottom
 
-    // Smooth W shape using cubic Bezier
     path.cubicTo(
       size.width * 0.2, size.height + 20,  // left control point
       size.width * 0.35, size.height - 50, // middle-left control

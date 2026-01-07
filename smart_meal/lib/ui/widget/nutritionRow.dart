@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 class NutritionRow extends StatelessWidget {
   final String label;
-  final String? level; // e.g., High/Medium/Low
+  final String? level; 
   final IconData icon;
   final bool?
-  booleanValue; // null for normal rows, true/false for contains/doesn't contain
+  booleanValue; 
 
   const NutritionRow({
     super.key,
@@ -50,7 +50,6 @@ class NutritionRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // If booleanValue is provided, render a check or cross instead of a progress bar
     if (booleanValue != null) {
       final bool contains = booleanValue!;
       final gradient = _gradientForLabel('vegetable', positive: contains);

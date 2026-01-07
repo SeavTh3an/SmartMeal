@@ -48,23 +48,17 @@ class Meal {
     }
   }
 
-  // ---------- HEALTH SCORE (0.0 - 1.0) ----------
   double get healthScore {
     double score = 0;
 
-    // Protein (max 30g → 30%)
     score += (nutrition.protein / 30).clamp(0, 1) * 0.30;
 
-    // Sugar (lower better, max 30g → 25%)
     score += ((30 - nutrition.sugar) / 30).clamp(0, 1) * 0.25;
 
-    // Fat (lower better, max 25g → 20%)
     score += ((25 - nutrition.fat) / 25).clamp(0, 1) * 0.20;
 
-    // Calories (lower better, max 800 kcal → 15%)
     score += ((800 - nutrition.calories) / 800).clamp(0, 1) * 0.15;
 
-    // Vegetables bonus (10%)
     if (nutrition.vegetables) {
       score += 0.10;
     }
@@ -72,7 +66,6 @@ class Meal {
     return score.clamp(0, 1);
   }
 
-  // ---------- HEALTH LABEL ----------
   String get healthLabel {
     final value = (healthScore * 10).toStringAsFixed(1);
 
@@ -85,7 +78,6 @@ class Meal {
     }
   }
 
-  // ---------- JSON ----------
   Map<String, dynamic> toJson() => {
         'id': id,
         'name': name,

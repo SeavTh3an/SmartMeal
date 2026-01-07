@@ -21,14 +21,12 @@ class SelectedFoodScreenState extends State<SelectedFoodScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Sync selected meals from MainScreen and apply current filter
     allMeals = MainScreen.of(context).selectedMealsList;
     _applyFilter();
     setState(() {});
   }
 
   void refresh() {
-    // Re-sync and re-filter when MainScreen notifies
     allMeals = MainScreen.of(context).selectedMealsList;
     _applyFilter();
     setState(() {});
@@ -73,7 +71,6 @@ class SelectedFoodScreenState extends State<SelectedFoodScreen> {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          // CURVED HEADER
           SliverToBoxAdapter(
             child: CurvedHeader(
               onMenuTap: _openTopMenu,
@@ -81,7 +78,6 @@ class SelectedFoodScreenState extends State<SelectedFoodScreen> {
             ),
           ),
 
-          //CATEGORY FILTER
           SliverToBoxAdapter(
             child: SizedBox(
               height: 90,
@@ -125,7 +121,6 @@ class SelectedFoodScreenState extends State<SelectedFoodScreen> {
             ),
           ),
 
-          //Title
           const SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
@@ -136,7 +131,6 @@ class SelectedFoodScreenState extends State<SelectedFoodScreen> {
             ),
           ),
 
-          // SELECTED MEALS LIST
           SliverPadding(
             padding: const EdgeInsets.only(bottom: 16),
             sliver: SliverToBoxAdapter(

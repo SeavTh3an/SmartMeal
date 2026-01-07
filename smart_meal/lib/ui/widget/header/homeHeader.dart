@@ -58,7 +58,7 @@ class HomeHeader extends StatelessWidget {
             ),
           ),
 
-          // Food image 
+
           Positioned(
             top: 30,
             right: 16, 

@@ -45,7 +45,6 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
-  /// Only adds to SelectedFoodScreen when user selects a meal
   void addSelectedMeal(Meal meal) {
     if (!selectedMeals.contains(meal)) {
       selectedMeals.add(meal);
@@ -60,7 +59,6 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
-  /// Add meal to ListFoodScreen (from AddFoodScreen)
   void addNewMealToList(Meal meal) {
     listFoodKey.currentState?.addMeal(meal);
   }

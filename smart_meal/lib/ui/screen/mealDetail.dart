@@ -26,7 +26,6 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            /// HEADER WITH CURVE
             Stack(
               clipBehavior: Clip.none,
               children: [
@@ -45,7 +44,6 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
                   ),
                 ),
 
-                /// BACK BUTTON
                 Positioned(
                   top: 50,
                   left: 16,
@@ -104,7 +102,6 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
 
             const SizedBox(height: 70),
 
-            /// MEAL NAME
             Text(
               widget.meal.name,
               style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
@@ -112,7 +109,6 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
 
             const SizedBox(height: 3),
 
-            /// DESCRIPTION
             Text(
               widget.meal.description,
               style: const TextStyle(fontSize: 16, color: Colors.grey),
@@ -120,7 +116,6 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
 
             const SizedBox(height: 24),
 
-            //NUTRITION TITLE
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Align(
@@ -133,7 +128,6 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
             ),
             const SizedBox(height: 12),
 
-            /// NUTRITION INFO (carded with app color)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Card(
@@ -182,7 +176,6 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
             ),
             const SizedBox(height: 30),
 
-            ///INGREDIENT LIST
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Align(
@@ -210,7 +203,6 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
                 ),
               ),
             ),
-            //COOKINGSTEP TITLE
             const SizedBox(height: 24),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
@@ -234,14 +226,12 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
               ),
             ),
 
-            ///BUTTON
             const SizedBox(height: 30),
 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
                 children: [
-                  /// CANCEL BUTTON
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () {
@@ -263,7 +253,6 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
 
                   const SizedBox(width: 16),
 
-                  /// SELECT / UNSELECT BUTTON
                   Expanded(
                     child: Builder(
                       builder: (context) {

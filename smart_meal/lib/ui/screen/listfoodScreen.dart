@@ -77,7 +77,6 @@ class ListFoodScreenState extends State<ListFoodScreen> {
     });
   }
 
-  /// ✅ Add a new meal to ListFoodScreen only
   void addMeal(Meal meal) {
     setState(() {
       allMeals.add(meal);

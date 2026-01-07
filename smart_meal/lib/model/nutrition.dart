@@ -13,7 +13,6 @@ class Nutrition {
     required this.vegetables,
   });
 
-    // Convert Nutrition object to JSON
   Map<String, dynamic> toJson() => {
         'calories': calories,
         'protein': protein,
@@ -22,7 +21,6 @@ class Nutrition {
         'vegetables': vegetables,
       };
 
-  // Convert JSON to Nutrition object
   factory Nutrition.fromJson(Map<String, dynamic> json) => Nutrition(
     calories: (json['calories'] as num).toDouble(),
     protein: (json['protein'] as num).toDouble(),
