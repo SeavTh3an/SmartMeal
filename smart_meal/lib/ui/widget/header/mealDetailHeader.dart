@@ -28,7 +28,7 @@ class MealDetailHeader extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: IconButton(
                   icon: const Icon(Icons.menu),
-                  color: Colors.white,
+                  color: Colors.black,
                   onPressed: onMenuTap,
                 ),
               ),
@@ -36,7 +36,7 @@ class MealDetailHeader extends StatelessWidget {
                 Text(
                   title!,
                   style: const TextStyle(
-                    color: Colors.white,
+                    color: Colors.black,
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
                   ),

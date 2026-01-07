@@ -1,9 +1,9 @@
-
 import 'package:flutter/material.dart';
 import '../../model/meal.dart';
 import '../../model/nutrition.dart';
 import 'mainScreen.dart';
-import '../widget/header/curveHead.dart'; 
+import '../widget/header/curveHead.dart';
+import '../widget/topNavigation.dart';
 
 class AddFoodScreen extends StatefulWidget {
   const AddFoodScreen({super.key});
@@ -61,9 +61,9 @@ class _AddFoodScreenState extends State<AddFoodScreen> {
         _hasVegetables = false;
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Meal added successfully!')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Meal added successfully!')));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please fill all required fields')),
@@ -79,19 +79,15 @@ class _AddFoodScreenState extends State<AddFoodScreen> {
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface, // theme surface
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: const Color(0xFF608D43),
-          width: 1,
-        ),
+        border: Border.all(color: const Color(0xFF608D43), width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              )),
+          Text(
+            title,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          ),
           const SizedBox(height: 12),
           child,
         ],
@@ -106,23 +102,36 @@ class _AddFoodScreenState extends State<AddFoodScreen> {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          // Header
+          // Header (styled like List/Selected)
           SliverToBoxAdapter(
             child: CurvedHeader(
-              title: null, 
+              title: 'Add Food',
               onMenuTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Menu tapped')),
+                showModalBottomSheet(
+                  context: context,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(24),
+                    ),
+                  ),
+                  builder: (_) => TopMenuSheet(
+                    currentIndex: 2,
+                    onSelected: (index) {
+                      MainScreen.of(context).changeTab(index);
+                    },
+                  ),
                 );
               },
               child: const Padding(
-                padding: EdgeInsets.only(top: 8, left: 15), 
-                child: Text(
-                  'Add Your New Recipe',
-                  style: TextStyle(
-                    color: Color(0xFF1F3A22),
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
+                padding: EdgeInsets.only(top: 8),
+                child: Center(
+                  child: Text(
+                    'Add Your New Recipe',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ),
@@ -143,16 +152,18 @@ class _AddFoodScreenState extends State<AddFoodScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text('Meal Name',
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.w600)),
+                              const Text(
+                                'Meal Name',
+                                style: TextStyle(fontWeight: FontWeight.w600),
+                              ),
                               const SizedBox(height: 8),
                               TextFormField(
                                 controller: _nameController,
                                 decoration: const InputDecoration(
                                   hintText: 'e.g. Grilled Chicken Salad',
                                 ),
-                                validator: (v) => (v == null || v.trim().isEmpty)
+                                validator: (v) =>
+                                    (v == null || v.trim().isEmpty)
                                     ? 'Enter meal name'
                                     : null,
                               ),
@@ -164,17 +175,20 @@ class _AddFoodScreenState extends State<AddFoodScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text('Category',
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.w600)),
+                              const Text(
+                                'Category',
+                                style: TextStyle(fontWeight: FontWeight.w600),
+                              ),
                               const SizedBox(height: 8),
                               DropdownButtonFormField<Category>(
                                 value: _selectedCategory,
                                 items: Category.values
-                                    .map((cat) => DropdownMenuItem(
-                                          value: cat,
-                                          child: Text(cat.name),
-                                        ))
+                                    .map(
+                                      (cat) => DropdownMenuItem(
+                                        value: cat,
+                                        child: Text(cat.name),
+                                      ),
+                                    )
                                     .toList(),
                                 onChanged: (value) =>
                                     setState(() => _selectedCategory = value),
@@ -203,12 +217,14 @@ class _AddFoodScreenState extends State<AddFoodScreen> {
                             : null,
                       ),
                     ),
-                    // Image path field 
+                    // Image path field
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Image Path (optional)',
-                            style: TextStyle(fontWeight: FontWeight.w600)),
+                        const Text(
+                          'Image Path (optional)',
+                          style: TextStyle(fontWeight: FontWeight.w600),
+                        ),
                         const SizedBox(height: 8),
                         TextFormField(
                           controller: _imageController,
@@ -229,9 +245,12 @@ class _AddFoodScreenState extends State<AddFoodScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text('Calories',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w500)),
+                                    const Text(
+                                      'Calories',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
                                     const SizedBox(height: 8),
                                     TextFormField(
                                       controller: _calController,
@@ -248,9 +267,12 @@ class _AddFoodScreenState extends State<AddFoodScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text('Protein (g)',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w500)),
+                                    const Text(
+                                      'Protein (g)',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
                                     const SizedBox(height: 8),
                                     TextFormField(
                                       controller: _proteinController,
@@ -271,9 +293,12 @@ class _AddFoodScreenState extends State<AddFoodScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text('Sugar (g)',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w500)),
+                                    const Text(
+                                      'Sugar (g)',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
                                     const SizedBox(height: 8),
                                     TextFormField(
                                       controller: _sugarController,
@@ -290,9 +315,12 @@ class _AddFoodScreenState extends State<AddFoodScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text('Fat (g)',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w500)),
+                                    const Text(
+                                      'Fat (g)',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
                                     const SizedBox(height: 8),
                                     TextFormField(
                                       controller: _fatController,
@@ -312,8 +340,7 @@ class _AddFoodScreenState extends State<AddFoodScreen> {
                               const Expanded(
                                 child: Text(
                                   'Contain vegetables ?',
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.w600),
+                                  style: TextStyle(fontWeight: FontWeight.w600),
                                 ),
                               ),
                               Switch(
@@ -327,7 +354,7 @@ class _AddFoodScreenState extends State<AddFoodScreen> {
                         ],
                       ),
                     ),
-                    // Ingredients box 
+                    // Ingredients box
                     _box(
                       title: 'Ingredients',
                       child: TextFormField(
@@ -338,7 +365,7 @@ class _AddFoodScreenState extends State<AddFoodScreen> {
                         ),
                       ),
                     ),
-                    // Cooking steps box 
+                    // Cooking steps box
                     _box(
                       title: 'Cooking Steps',
                       child: TextFormField(
@@ -361,7 +388,10 @@ class _AddFoodScreenState extends State<AddFoodScreen> {
                               side: BorderSide(color: Color(0xFFE85C5C)),
                               foregroundColor: Colors.white,
                             ),
-                            child: const Text('Cancel', style: TextStyle(color: Color(0xFFE85C5C))),
+                            child: const Text(
+                              'Cancel',
+                              style: TextStyle(color: Color(0xFFE85C5C)),
+                            ),
                           ),
                         ),
                         const SizedBox(width: 16),

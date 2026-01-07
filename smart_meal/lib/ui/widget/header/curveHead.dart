@@ -12,7 +12,7 @@ class CurvedHeader extends StatelessWidget {
     return ClipPath(
       clipper: _CurvedHeaderClipper(),
       child: Container(
-        height: 170, 
+        height: 170,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -32,7 +32,7 @@ class CurvedHeader extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: IconButton(
                       icon: const Icon(Icons.menu),
-                      color: Colors.white,
+                      color: Colors.black,
                       onPressed: onMenuTap,
                     ),
                   ),
@@ -42,7 +42,7 @@ class CurvedHeader extends StatelessWidget {
                       child: Text(
                         title!,
                         style: const TextStyle(
-                          color: Colors.white,
+                          color: Colors.black,
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
                         ),
@@ -68,15 +68,21 @@ class _CurvedHeaderClipper extends CustomClipper<Path> {
     path.lineTo(0, size.height - 30); // left bottom
 
     path.cubicTo(
-      size.width * 0.2, size.height + 20,  // left control point
-      size.width * 0.35, size.height - 50, // middle-left control
-      size.width * 0.5, size.height - 30,  // middle point
+      size.width * 0.2,
+      size.height + 20, // left control point
+      size.width * 0.35,
+      size.height - 50, // middle-left control
+      size.width * 0.5,
+      size.height - 30, // middle point
     );
 
     path.cubicTo(
-      size.width * 0.65, size.height - 10, // middle-right control
-      size.width * 0.8, size.height + 20,  // right control point
-      size.width, size.height - 30,        // right bottom
+      size.width * 0.65,
+      size.height - 10, // middle-right control
+      size.width * 0.8,
+      size.height + 20, // right control point
+      size.width,
+      size.height - 30, // right bottom
     );
 
     path.lineTo(size.width, 0); // top-right

@@ -15,7 +15,7 @@ class HomeHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 200, 
+      height: 200,
       child: Stack(
         clipBehavior: Clip.none,
         children: [
@@ -23,7 +23,7 @@ class HomeHeader extends StatelessWidget {
           ClipPath(
             clipper: HomeWaveClipper(),
             child: Container(
-              height: 200, 
+              height: 200,
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   colors: [Color(0xFFCBF4B1), Color(0xFF608D43)],
@@ -39,12 +39,12 @@ class HomeHeader extends StatelessWidget {
             top: 40,
             left: 16,
             child: IconButton(
-              icon: const Icon(Icons.menu, color: Colors.white),
+              icon: const Icon(Icons.menu, color: Colors.black),
               onPressed: onMenuTap,
             ),
           ),
 
-          // Title 
+          // Title
           Positioned(
             top: 80,
             left: 50,
@@ -52,21 +52,16 @@ class HomeHeader extends StatelessWidget {
               title,
               style: const TextStyle(
                 fontSize: 22,
-                color: Color(0xFF264016), 
+                color: Colors.black,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ),
 
-
           Positioned(
             top: 30,
-            right: 16, 
-            child: Image.asset(
-              imagePath,
-              width: 150,
-              fit: BoxFit.contain,
-            ),
+            right: 16,
+            child: Image.asset(imagePath, width: 150, fit: BoxFit.contain),
           ),
         ],
       ),
@@ -83,14 +78,18 @@ class HomeWaveClipper extends CustomClipper<Path> {
 
     // Big wave left to center
     path.quadraticBezierTo(
-      size.width * 0.25, size.height + 40,
-      size.width * 0.5, size.height - 40,
+      size.width * 0.25,
+      size.height + 40,
+      size.width * 0.5,
+      size.height - 40,
     );
 
     // Smaller wave center to right
     path.quadraticBezierTo(
-      size.width * 0.75, size.height - 100,
-      size.width, size.height - 20,
+      size.width * 0.75,
+      size.height - 100,
+      size.width,
+      size.height - 20,
     );
 
     path.lineTo(size.width, 0); // top right

@@ -5,6 +5,8 @@ import '../widget/categoryCard.dart';
 import '../widget/listfoodCard.dart';
 import '../widget/header/curveHead.dart';
 import '../widget/searchbar.dart';
+import 'mainScreen.dart';
+import '../widget/topNavigation.dart';
 
 class ListFoodScreen extends StatefulWidget {
   final Category? initialCategory;
@@ -52,8 +54,9 @@ class ListFoodScreenState extends State<ListFoodScreen> {
     if (selectedCategory == null) {
       filteredMeals = allMeals;
     } else {
-      filteredMeals =
-          allMeals.where((meal) => meal.category == selectedCategory).toList();
+      filteredMeals = allMeals
+          .where((meal) => meal.category == selectedCategory)
+          .toList();
     }
   }
 
@@ -90,6 +93,21 @@ class ListFoodScreenState extends State<ListFoodScreen> {
     });
   }
 
+  void _openTopMenu() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (_) => TopMenuSheet(
+        currentIndex: 1,
+        onSelected: (index) {
+          MainScreen.of(context).changeTab(index);
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,7 +116,7 @@ class ListFoodScreenState extends State<ListFoodScreen> {
           SliverToBoxAdapter(
             child: CurvedHeader(
               title: "Find Your Meal For Today!",
-              onMenuTap: () {},
+              onMenuTap: _openTopMenu,
               child: Padding(
                 padding: const EdgeInsets.only(top: 12),
                 child: SearchBarWidget(onChanged: _searchMeals),
