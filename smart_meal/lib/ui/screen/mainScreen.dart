@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:smart_meal/model/meal.dart';
-
 import 'homeScreen.dart';
 import 'listfoodScreen.dart';
 import 'addfoodScreen.dart';
@@ -8,6 +7,8 @@ import 'selectedfoodScreen.dart';
 
 final GlobalKey<SelectedFoodScreenState> selectedFoodKey =
     GlobalKey<SelectedFoodScreenState>();
+final GlobalKey<ListFoodScreenState> listFoodKey =
+    GlobalKey<ListFoodScreenState>();
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -33,37 +34,35 @@ class _MainScreenState extends State<MainScreen> {
   void changeTab(int index) {
     setState(() {
       _currentIndex = index;
-      if (index != 1)
-        selectedCategory = null; // reset category when leaving list food
-
-      if (index == 3) {
-        // Get the SelectedFoodScreen state and refresh
-      }
+      if (index != 1) selectedCategory = null;
     });
   }
 
   void openListFoodWithCategory(Category? category) {
     setState(() {
       selectedCategory = category;
-      _currentIndex = 1; // switch to ListFoodScreen
+      _currentIndex = 1;
     });
   }
 
+  /// Only adds to SelectedFoodScreen when user selects a meal
   void addSelectedMeal(Meal meal) {
     if (!selectedMeals.contains(meal)) {
       selectedMeals.add(meal);
+      selectedFoodKey.currentState?.refresh();
     }
-    // 🔥 FORCE SelectedFoodScreen rebuild
-    selectedFoodKey.currentState?.refresh();
   }
 
   void removeSelectedMeal(Meal meal) {
     if (selectedMeals.contains(meal)) {
       selectedMeals.remove(meal);
-      // 🔥 FORCE SelectedFoodScreen rebuild
       selectedFoodKey.currentState?.refresh();
-      setState(() {});
     }
+  }
+
+  /// Add meal to ListFoodScreen (from AddFoodScreen)
+  void addNewMealToList(Meal meal) {
+    listFoodKey.currentState?.addMeal(meal);
   }
 
   @override
@@ -73,8 +72,11 @@ class _MainScreenState extends State<MainScreen> {
         index: _currentIndex,
         children: [
           const HomeScreen(),
-          ListFoodScreen(initialCategory: selectedCategory),
-          const AddFoodScreen(),
+          ListFoodScreen(
+            key: listFoodKey,
+            initialCategory: selectedCategory,
+          ),
+          AddFoodScreen(), // calls addNewMealToList
           SelectedFoodScreen(key: selectedFoodKey),
         ],
       ),
@@ -87,18 +89,9 @@ class _MainScreenState extends State<MainScreen> {
         type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.food_bank),
-            label: 'List Food',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add_circle),
-            label: 'Add Food',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: 'Selected',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.food_bank), label: 'List Food'),
+          BottomNavigationBarItem(icon: Icon(Icons.add_circle), label: 'Add Food'),
+          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Selected'),
         ],
       ),
     );

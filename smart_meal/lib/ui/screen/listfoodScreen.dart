@@ -12,10 +12,10 @@ class ListFoodScreen extends StatefulWidget {
   const ListFoodScreen({super.key, this.initialCategory});
 
   @override
-  State<ListFoodScreen> createState() => _ListFoodScreenState();
+  ListFoodScreenState createState() => ListFoodScreenState();
 }
 
-class _ListFoodScreenState extends State<ListFoodScreen> {
+class ListFoodScreenState extends State<ListFoodScreen> {
   List<Meal> allMeals = [];
   List<Meal> filteredMeals = [];
   bool isLoading = true;
@@ -52,9 +52,8 @@ class _ListFoodScreenState extends State<ListFoodScreen> {
     if (selectedCategory == null) {
       filteredMeals = allMeals;
     } else {
-      filteredMeals = allMeals
-          .where((meal) => meal.category == selectedCategory)
-          .toList();
+      filteredMeals =
+          allMeals.where((meal) => meal.category == selectedCategory).toList();
     }
   }
 
@@ -74,6 +73,20 @@ class _ListFoodScreenState extends State<ListFoodScreen> {
   void _onCategoryTap(Category? category) {
     setState(() {
       selectedCategory = category;
+      _applyFilter();
+    });
+  }
+
+  /// ✅ Add a new meal to ListFoodScreen only
+  void addMeal(Meal meal) {
+    setState(() {
+      allMeals.add(meal);
+      _applyFilter();
+    });
+  }
+
+  void refreshMeals() {
+    setState(() {
       _applyFilter();
     });
   }
