@@ -6,8 +6,13 @@ import 'mainScreen.dart';
 
 class MealDetailScreen extends StatefulWidget {
   final Meal meal;
+  final bool isSelected;
 
-  const MealDetailScreen({super.key, required this.meal});
+  const MealDetailScreen({
+    super.key,
+    required this.meal,
+    this.isSelected = false,
+  });
 
   @override
   State<MealDetailScreen> createState() => _MealDetailScreenState();
@@ -254,26 +259,43 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
 
                   const SizedBox(width: 16),
 
-                  /// SELECT BUTTON
+                  /// SELECT / UNSELECT BUTTON
                   Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(
-                          context,
-                          true,
-                        ); // signal selection to caller
+                    child: Builder(
+                      builder: (context) {
+                        final bool isSelected = widget.isSelected;
+                        return ElevatedButton(
+                          onPressed: () {
+                            if (isSelected) {
+                              Navigator.pop(
+                                context,
+                                'removed',
+                              ); // signal removal to caller
+                            } else {
+                              Navigator.pop(
+                                context,
+                                true,
+                              ); // signal selection to caller
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: isSelected
+                                ? Colors.red
+                                : const Color(0xFF6FA55A),
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: Text(
+                            isSelected ? "Unselect" : "Select",
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                            ),
+                          ),
+                        );
                       },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF6FA55A),
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      child: const Text(
-                        "Select",
-                        style: TextStyle(fontSize: 16, color: Colors.white),
-                      ),
                     ),
                   ),
                 ],

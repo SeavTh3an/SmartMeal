@@ -139,12 +139,25 @@ class ListfoodCard extends StatelessWidget {
   void _showMealDetail(BuildContext context, Meal meal) async {
     final selected = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => MealDetailScreen(meal: meal)),
+      MaterialPageRoute(
+        builder: (_) => MealDetailScreen(
+          meal: meal,
+          isSelected: MainScreen.of(context).selectedMealsList.contains(meal),
+        ),
+      ),
     );
 
     if (selected == true) {
       MainScreen.of(context).addSelectedMeal(meal);
       MainScreen.of(context).changeTab(3);
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Added to selected meals')));
+    } else if (selected == 'removed') {
+      MainScreen.of(context).removeSelectedMeal(meal);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Removed from selected meals')),
+      );
     }
   }
 }

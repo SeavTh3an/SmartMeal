@@ -5,7 +5,7 @@ import '../widget/topNavigation.dart';
 import '../widget/categoryCard.dart';
 import '../widget/listfoodCard.dart';
 import 'mainScreen.dart';
-
+import 'listfoodScreen.dart';
 
 class SelectedFoodScreen extends StatefulWidget {
   const SelectedFoodScreen({super.key});
@@ -15,16 +15,24 @@ class SelectedFoodScreen extends StatefulWidget {
 }
 
 class SelectedFoodScreenState extends State<SelectedFoodScreen> {
+  Category? selectedCategory;
+  List<Meal> allMeals = [];
+  List<Meal> filteredMeals = [];
   @override
-void didChangeDependencies() {
-  super.didChangeDependencies();
-  // This runs whenever the widget is rebuilt
-  setState(() {}); // forces rebuild to show latest selected meals
-}
-void refresh() {
-  setState(() {});
-}
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Sync selected meals from MainScreen and apply current filter
+    allMeals = MainScreen.of(context).selectedMealsList;
+    _applyFilter();
+    setState(() {});
+  }
 
+  void refresh() {
+    // Re-sync and re-filter when MainScreen notifies
+    allMeals = MainScreen.of(context).selectedMealsList;
+    _applyFilter();
+    setState(() {});
+  }
 
   void _openTopMenu() {
     showModalBottomSheet(
@@ -39,6 +47,23 @@ void refresh() {
         },
       ),
     );
+  }
+
+  void _onCategoryTap(Category? category) {
+    setState(() {
+      selectedCategory = category;
+      _applyFilter();
+    });
+  }
+
+  void _applyFilter() {
+    if (selectedCategory == null) {
+      filteredMeals = allMeals;
+    } else {
+      filteredMeals = allMeals
+          .where((meal) => meal.category == selectedCategory)
+          .toList();
+    }
   }
 
   @override
@@ -68,29 +93,41 @@ void refresh() {
                     title: 'All',
                     imagePath: 'assets/image/category_image/all.png',
                     small: true,
-                    onTap: () {
-                      setState(() {}); // refresh for all
-                    },
+                    onTap: () => _onCategoryTap(null),
                   ),
                   const SizedBox(width: 12),
                   CategoryCard(
                     title: 'Khmer',
                     imagePath: 'assets/image/category_image/prohok_rmbg.png',
                     small: true,
+                    onTap: () => _onCategoryTap(Category.khmerFood),
                   ),
                   const SizedBox(width: 12),
                   CategoryCard(
                     title: 'Western',
                     imagePath: 'assets/image/category_image/steak_rmbg.png',
                     small: true,
+                    onTap: () => _onCategoryTap(Category.westernFood),
                   ),
                   const SizedBox(width: 12),
                   CategoryCard(
                     title: 'Dessert',
                     imagePath: 'assets/image/category_image/dessert_rmbg.png',
                     small: true,
+                    onTap: () => _onCategoryTap(Category.dessert),
                   ),
                 ],
+              ),
+            ),
+          ),
+
+          //Title
+          const SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
+              child: Text(
+                'You have selected these meals for today!',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),
           ),
@@ -99,20 +136,30 @@ void refresh() {
           SliverPadding(
             padding: const EdgeInsets.only(bottom: 16),
             sliver: SliverToBoxAdapter(
-              child: selectedMeals.isEmpty
+              child: allMeals.isEmpty
                   ? const Padding(
                       padding: EdgeInsets.only(top: 40),
                       child: Center(
                         child: Text(
                           "No meals selected yet",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey,
-                          ),
+                          style: TextStyle(fontSize: 16, color: Colors.grey),
                         ),
                       ),
                     )
-                  : ListfoodCard(meals: selectedMeals),
+                  : (filteredMeals.isEmpty
+                        ? const Padding(
+                            padding: EdgeInsets.only(top: 40),
+                            child: Center(
+                              child: Text(
+                                "No meals in this category",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ),
+                          )
+                        : ListfoodCard(meals: filteredMeals)),
             ),
           ),
         ],
