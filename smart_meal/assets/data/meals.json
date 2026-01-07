@@ -84,5 +84,231 @@
       "Butter"
     ],
     "cookingInstructions": "Mix ingredients, bake in oven at 180°C for 35 minutes."
-  }
+  },
+  {
+  "id": "KH002",
+  "name": "Beef Lok Lak",
+  "description": "Classic Khmer stir-fried beef served with fresh vegetables.",
+  "image": "assets/image/khmer_img/loklak.jpg",
+  "category": 0,
+  "nutrition": {
+    "calories": 480,
+    "protein": 32.0,
+    "sugar": 2.5,
+    "fat": 18.0,
+    "vegetables": true
+  },
+  "ingredients": [
+    "Beef",
+    "Garlic",
+    "Soy sauce",
+    "Black pepper",
+    "Oyster sauce",
+    "Lettuce",
+    "Tomato"
+  ],
+  "cookingInstructions": "Begin by slicing the beef into thin, bite-sized pieces and marinating it with soy sauce, oyster sauce, minced garlic, and freshly ground black pepper for at least 20 minutes to enhance the flavor. Heat oil in a wok or frying pan over high heat until very hot, then quickly stir-fry the beef while constantly tossing to prevent overcooking. Cook just until the meat is browned on the outside but still tender inside. Serve immediately on a plate lined with fresh lettuce and sliced tomatoes, traditionally accompanied by a lime and pepper dipping sauce."
+},
+{
+  "id": "WE003",
+  "name": "Grilled Chicken Breast",
+  "description": "Herb-marinated grilled chicken breast.",
+  "image": "assets/image/western_img/grilled_chicken.jpg",
+  "category": 1,
+  "nutrition": {
+    "calories": 390,
+    "protein": 35.0,
+    "sugar": 1.2,
+    "fat": 14.0,
+    "vegetables": false
+  },
+  "ingredients": [
+    "Chicken breast",
+    "Olive oil",
+    "Garlic",
+    "Rosemary",
+    "Salt",
+    "Black pepper"
+  ],
+  "cookingInstructions": "Start by marinating the chicken breast with olive oil, minced garlic, chopped rosemary, salt, and black pepper for at least 30 minutes to allow the flavors to penetrate the meat. Preheat a grill pan or outdoor grill to medium heat and lightly oil the surface to prevent sticking. Grill the chicken for several minutes on each side until fully cooked and golden brown, ensuring the inside remains juicy. Let the chicken rest for a few minutes before slicing and serving to retain moisture."
+},
+{
+  "id": "DE002",
+  "name": "Vanilla Ice Cream",
+  "description": "Creamy homemade vanilla ice cream.",
+  "image": "assets/image/dessert_img/vanilla.jpg",
+  "category": 2,
+  "nutrition": {
+    "calories": 280,
+    "protein": 5.0,
+    "sugar": 24.0,
+    "fat": 16.0,
+    "vegetables": false
+  },
+  "ingredients": [
+    "Milk",
+    "Cream",
+    "Sugar",
+    "Vanilla extract",
+    "Egg yolk"
+  ],
+  "cookingInstructions": "Heat the milk and cream together in a saucepan over medium heat until warm but not boiling. In a separate bowl, whisk egg yolks with sugar until pale and thick, then slowly pour in the warm milk mixture while stirring continuously. Return the mixture to the saucepan and cook gently, stirring constantly, until it thickens into a custard. Remove from heat, add vanilla extract, allow it to cool completely, then churn in an ice cream maker until smooth and creamy before freezing."
+},
+{
+  "id": "KH003",
+  "name": "Fish Amok",
+  "description": "Traditional Cambodian steamed fish curry.",
+  "image": "assets/image/khmer_img/amok.jpg",
+  "category": 0,
+  "nutrition": {
+    "calories": 420,
+    "protein": 28.0,
+    "sugar": 3.0,
+    "fat": 20.0,
+    "vegetables": true
+  },
+  "ingredients": [
+    "Fish fillet",
+    "Coconut milk",
+    "Kroeung paste",
+    "Egg",
+    "Banana leaf",
+    "Kaffir lime leaf"
+  ],
+  "cookingInstructions": "Cut the fish into medium-sized pieces and gently mix with kroeung paste, coconut milk, and beaten egg to create a rich curry mixture. Carefully pour the mixture into banana leaf cups and garnish with sliced kaffir lime leaves for aroma. Steam the fish curry over medium heat until it is firm and fully cooked, allowing the flavors to blend together. Serve warm with rice for a traditional Cambodian meal experience."
+},
+{
+  "id": "WE004",
+  "name": "Spaghetti Bolognese",
+  "description": "Classic Italian pasta with meat sauce.",
+  "image": "assets/image/western_img/spaghetti.jpg",
+  "category": 1,
+  "nutrition": {
+    "calories": 610,
+    "protein": 22.0,
+    "sugar": 6.0,
+    "fat": 20.0,
+    "vegetables": true
+  },
+  "ingredients": [
+    "Spaghetti",
+    "Ground beef",
+    "Tomato sauce",
+    "Onion",
+    "Garlic",
+    "Olive oil"
+  ],
+  "cookingInstructions": "Boil the spaghetti in salted water until al dente, then drain and set aside. In a separate pan, sauté chopped onion and garlic in olive oil until soft and fragrant before adding ground beef. Cook the beef until browned, then stir in tomato sauce and allow it to simmer slowly so the flavors deepen. Combine the sauce with the cooked spaghetti and serve hot, optionally topped with grated cheese."
+},
+{
+  "id": "DE003",
+  "name": "Fruit Tart",
+  "description": "Sweet tart topped with fresh fruits.",
+  "image": "assets/image/dessert_img/fruit_tart.jpg",
+  "category": 2,
+  "nutrition": {
+    "calories": 360,
+    "protein": 5.0,
+    "sugar": 28.0,
+    "fat": 18.0,
+    "vegetables": false
+  },
+  "ingredients": [
+    "Flour",
+    "Butter",
+    "Sugar",
+    "Custard",
+    "Fresh fruits"
+  ],
+  "cookingInstructions": "Prepare the tart crust by mixing flour, butter, and sugar until crumbly, then press into a tart pan and bake until golden. Allow the crust to cool completely before filling it with smooth custard. Arrange fresh fruits neatly on top for both flavor and presentation. Chill the tart in the refrigerator before serving to help it set properly."
+},
+{
+  "id": "KH004",
+  "name": "Papaya Salad",
+  "description": "Fresh and spicy Khmer green papaya salad.",
+  "image": "assets/image/khmer_img/papayasalad.jpg",
+  "category": 0,
+  "nutrition": {
+    "calories": 250,
+    "protein": 6.0,
+    "sugar": 7.0,
+    "fat": 6.0,
+    "vegetables": true
+  },
+  "ingredients": [
+    "Green papaya",
+    "Chili",
+    "Lime",
+    "Fish sauce",
+    "Peanuts"
+  ],
+  "cookingInstructions": "Shred the green papaya into thin strips and place in a large bowl. Pound chili and garlic together before mixing with lime juice and fish sauce to create a spicy dressing. Toss the papaya with the dressing until evenly coated, then top with crushed peanuts for extra texture. Serve fresh for a crisp and refreshing dish."
+},
+{
+  "id": "WE005",
+  "name": "Cheeseburger",
+  "description": "Juicy beef burger with melted cheese.",
+  "image": "assets/image/western_img/burger.jpg",
+  "category": 1,
+  "nutrition": {
+    "calories": 720,
+    "protein": 30.0,
+    "sugar": 8.0,
+    "fat": 40.0,
+    "vegetables": false
+  },
+  "ingredients": [
+    "Beef patty",
+    "Burger bun",
+    "Cheese",
+    "Lettuce",
+    "Tomato"
+  ],
+  "cookingInstructions": "Season the beef patty with salt and pepper and grill it over medium heat until cooked to your preferred doneness. Place cheese on top of the patty during the final minute of cooking so it melts evenly. Toast the burger buns lightly, then assemble with lettuce, tomato, and the cheesy beef patty. Serve immediately while hot."
+},
+{
+  "id": "DE004",
+  "name": "Pancakes",
+  "description": "Fluffy breakfast pancakes.",
+  "image": "assets/image/dessert_img/pancake.jpg",
+  "category": 2,
+  "nutrition": {
+    "calories": 330,
+    "protein": 8.0,
+    "sugar": 12.0,
+    "fat": 10.0,
+    "vegetables": false
+  },
+  "ingredients": [
+    "Flour",
+    "Milk",
+    "Egg",
+    "Sugar",
+    "Butter"
+  ],
+  "cookingInstructions": "Mix flour, sugar, milk, and egg in a bowl until smooth and lump-free. Heat a pan over medium heat and lightly grease with butter. Pour batter into the pan and cook until bubbles form on the surface, then flip and cook until golden brown. Serve warm with syrup or fruit."
+},
+{
+  "id": "KH005",
+  "name": "Chicken Curry",
+  "description": "Khmer-style mild chicken curry.",
+  "image": "assets/image/khmer_img/chicken_curry.jpg",
+  "category": 0,
+  "nutrition": {
+    "calories": 510,
+    "protein": 26.0,
+    "sugar": 5.0,
+    "fat": 22.0,
+    "vegetables": true
+  },
+  "ingredients": [
+    "Chicken",
+    "Coconut milk",
+    "Potato",
+    "Carrot",
+    "Curry paste"
+  ],
+  "cookingInstructions": "Heat oil in a pot and stir-fry the curry paste until fragrant, then add chicken pieces and cook until lightly browned. Pour in coconut milk and bring to a gentle simmer before adding vegetables such as potato and carrot. Cook slowly until the chicken is tender and the vegetables are soft, allowing the curry to thicken naturally. Serve hot with bread or rice."
+}
+
 ]
