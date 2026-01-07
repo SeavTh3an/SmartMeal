@@ -357,10 +357,11 @@ class _AddFoodScreenState extends State<AddFoodScreen> {
                           child: ElevatedButton(
                             onPressed: () => Navigator.of(context).maybePop(),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFFE85C5C),
+                              backgroundColor: Colors.white,
+                              side: BorderSide(color: Color(0xFFE85C5C)),
                               foregroundColor: Colors.white,
                             ),
-                            child: const Text('Cancel'),
+                            child: const Text('Cancel', style: TextStyle(color: Color(0xFFE85C5C))),
                           ),
                         ),
                         const SizedBox(width: 16),

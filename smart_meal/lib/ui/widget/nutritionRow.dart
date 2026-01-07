@@ -1,99 +1,111 @@
+
 import 'package:flutter/material.dart';
 
 class NutritionRow extends StatelessWidget {
   final String label;
-  final String? level; 
+  final String? levelText;    // low medium high
   final IconData icon;
-  final bool?
-  booleanValue; 
+  final bool? booleanValue;   // vegetable: yes/no
 
   const NutritionRow({
     super.key,
     required this.label,
-    this.level,
+    this.levelText,
     required this.icon,
     this.booleanValue,
   });
 
-  LinearGradient _gradientForLabel(String label, {bool positive = true}) {
+  // Nutrients where HIGH is considered bad
+  static const Set<String> _highIsBad = {
+    'calories',
+    'sugar',
+    'fats',
+  };
+
+  // Nutrients where HIGH is considered good
+  static const Set<String> _highIsGood = {
+    'protein',
+    'vegetable',
+  };
+
+  // Color mapping for levels for "high is BAD"
+  Color _colorForLevelHighBad(String? level) {
+    switch ((level ?? '').toLowerCase().trim()) {
+      case 'high':
+        return const Color(0xFFD32F2F); // red
+      case 'medium':
+        return const Color(0xFFFFA000); // orange/amber
+      case 'low':
+        return const Color(0xFF2E7D32); // green
+      default:
+        return Colors.grey;
+    }
+  }
+
+  // Color mapping for levels for "high is GOOD"
+  Color _colorForLevelHighGood(String? level) {
+    switch ((level ?? '').toLowerCase().trim()) {
+      case 'high':
+        return const Color(0xFF2E7D32); // green
+      case 'medium':
+        return const Color(0xFFFFA000); // orange/amber
+      case 'low':
+        return const Color(0xFFD32F2F); // red
+      default:
+        return Colors.grey;
+    }
+  }
+
+  // Pick icon color per metric (optional aesthetic)
+  Color _iconTintForLabel(String label) {
     switch (label.toLowerCase()) {
       case 'calories':
-        return const LinearGradient(
-          colors: [Color(0xFFFFB357), Color(0xFFFF7043)],
-        );
+        return const Color(0xFFEF6C00); // orange
       case 'protein':
-        return const LinearGradient(
-          colors: [Color(0xFF7FB3FF), Color(0xFF4A90E2)],
-        );
+        return const Color(0xFF00796B); // teal
       case 'sugar':
-        return const LinearGradient(
-          colors: [Color(0xFFF19BFF), Color(0xFFBB6BD9)],
-        );
+        return const Color(0xFFC2185B); // pink/red
       case 'fats':
-        return const LinearGradient(
-          colors: [Color(0xFFFFD54F), Color(0xFFFFB300)],
-        );
+        return const Color(0xFFFFA000); // amber
       case 'vegetable':
-        return positive
-            ? const LinearGradient(
-                colors: [Color(0xFFB8E986), Color(0xFF6FA55A)],
-              )
-            : const LinearGradient(
-                colors: [Color(0xFFF28B82), Color(0xFFD32F2F)],
-              );
+        return const Color(0xFF2E7D32); // green
       default:
-        return const LinearGradient(
-          colors: [Color(0xFFB8E986), Color(0xFF6FA55A)],
-        );
+        return const Color(0xFF1F3A22); // dark green default
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final String key = label.toLowerCase().trim();
+
+    // Boolean row (Vegetable Yes/No)
     if (booleanValue != null) {
-      final bool contains = booleanValue!;
-      final gradient = _gradientForLabel('vegetable', positive: contains);
-      final IconData mark = contains ? Icons.check : Icons.close;
+      final bool value = booleanValue!;
+      final Color pill = value ? const Color(0xFF2E7D32) : const Color(0xFFD32F2F);
+      final IconData mark = value ? Icons.check : Icons.close;
 
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: Row(
           children: [
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                gradient: gradient,
-                shape: BoxShape.circle,
-              ),
-              child: Center(child: Icon(icon, size: 20, color: Colors.white)),
-            ),
+            Icon(icon, color: _iconTintForLabel(key)),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
                 label,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
               ),
             ),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: contains ? Color(0xFF4CAF50) : Color(0xFFEF5350),
-                borderRadius: BorderRadius.circular(20),
-              ),
+              decoration: BoxDecoration(color: pill, borderRadius: BorderRadius.circular(20)),
               child: Row(
                 children: [
                   Icon(mark, color: Colors.white, size: 16),
                   const SizedBox(width: 6),
                   Text(
-                    contains ? 'Contains' : "Doesn't contain",
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    value ? 'Yes' : 'No',
+                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
                   ),
                 ],
               ),
@@ -103,83 +115,33 @@ class NutritionRow extends StatelessWidget {
       );
     }
 
-    // Default: show level + progress bar
-    Color barColor;
-    double progressValue;
-
-    switch (level) {
-      case "High":
-        barColor = Colors.green;
-        progressValue = 0.9;
-        break;
-      case "Medium":
-        barColor = Colors.orange;
-        progressValue = 0.6;
-        break;
-      default:
-        barColor = Colors.red;
-        progressValue = 0.3;
-    }
+    // Level row (Calories, Protein, Sugar, Fats...)
+    final Color badgeColor = _highIsBad.contains(key)
+        ? _colorForLevelHighBad(levelText)
+        : _colorForLevelHighGood(levelText);
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Column(
+      child: Row(
         children: [
-          /// MAIN ROW
-          Row(
-            children: [
-              /// ICON (colorful)
-              Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  gradient: _gradientForLabel(label),
-                  shape: BoxShape.circle,
-                ),
-                child: Center(child: Icon(icon, size: 20, color: Colors.white)),
-              ),
-
-              const SizedBox(width: 12),
-
-              /// LABEL
-              Expanded(
-                child: Text(label, style: const TextStyle(fontSize: 16)),
-              ),
-
-              /// LEVEL BADGE
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: barColor,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  level ?? '',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: barColor.computeLuminance() > 0.6
-                        ? Colors.black
-                        : Colors.white,
-                  ),
-                ),
-              ),
-            ],
+          Icon(icon, color: _iconTintForLabel(key)),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              label,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            ),
           ),
-
-          const SizedBox(height: 8),
-
-          /// PROGRESS BAR
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: LinearProgressIndicator(
-              value: progressValue,
-              minHeight: 6,
-              backgroundColor: Colors.grey.shade200,
-              valueColor: AlwaysStoppedAnimation<Color>(barColor),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(color: badgeColor, borderRadius: BorderRadius.circular(20)),
+            child: Text(
+              levelText ?? '',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: badgeColor.computeLuminance() > 0.6 ? Colors.black : Colors.white,
+              ),
             ),
           ),
         ],
