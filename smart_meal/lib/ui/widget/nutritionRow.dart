@@ -2,18 +2,109 @@ import 'package:flutter/material.dart';
 
 class NutritionRow extends StatelessWidget {
   final String label;
-  final String level;
+  final String? level; // e.g., High/Medium/Low
   final IconData icon;
+  final bool?
+  booleanValue; // null for normal rows, true/false for contains/doesn't contain
 
   const NutritionRow({
     super.key,
     required this.label,
-    required this.level,
+    this.level,
     required this.icon,
+    this.booleanValue,
   });
+
+  LinearGradient _gradientForLabel(String label, {bool positive = true}) {
+    switch (label.toLowerCase()) {
+      case 'calories':
+        return const LinearGradient(
+          colors: [Color(0xFFFFB357), Color(0xFFFF7043)],
+        );
+      case 'protein':
+        return const LinearGradient(
+          colors: [Color(0xFF7FB3FF), Color(0xFF4A90E2)],
+        );
+      case 'sugar':
+        return const LinearGradient(
+          colors: [Color(0xFFF19BFF), Color(0xFFBB6BD9)],
+        );
+      case 'fats':
+        return const LinearGradient(
+          colors: [Color(0xFFFFD54F), Color(0xFFFFB300)],
+        );
+      case 'vegetable':
+        return positive
+            ? const LinearGradient(
+                colors: [Color(0xFFB8E986), Color(0xFF6FA55A)],
+              )
+            : const LinearGradient(
+                colors: [Color(0xFFF28B82), Color(0xFFD32F2F)],
+              );
+      default:
+        return const LinearGradient(
+          colors: [Color(0xFFB8E986), Color(0xFF6FA55A)],
+        );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    // If booleanValue is provided, render a check or cross instead of a progress bar
+    if (booleanValue != null) {
+      final bool contains = booleanValue!;
+      final gradient = _gradientForLabel('vegetable', positive: contains);
+      final IconData mark = contains ? Icons.check : Icons.close;
+
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Row(
+          children: [
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                gradient: gradient,
+                shape: BoxShape.circle,
+              ),
+              child: Center(child: Icon(icon, size: 20, color: Colors.white)),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: contains ? Color(0xFF4CAF50) : Color(0xFFEF5350),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Row(
+                children: [
+                  Icon(mark, color: Colors.white, size: 16),
+                  const SizedBox(width: 6),
+                  Text(
+                    contains ? 'Contains' : "Doesn't contain",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    // Default: show level + progress bar
     Color barColor;
     double progressValue;
 
@@ -32,54 +123,55 @@ class NutritionRow extends StatelessWidget {
     }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Column(
         children: [
           /// MAIN ROW
           Row(
             children: [
-              /// ICON
+              /// ICON (colorful)
               Container(
-                width: 36,
-                height: 36,
+                width: 44,
+                height: 44,
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
+                  gradient: _gradientForLabel(label),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(icon, size: 20, color: Colors.black87),
+                child: Center(child: Icon(icon, size: 20, color: Colors.white)),
               ),
 
               const SizedBox(width: 12),
 
               /// LABEL
               Expanded(
-                child: Text(
-                  label,
-                  style: const TextStyle(fontSize: 16),
-                ),
+                child: Text(label, style: const TextStyle(fontSize: 16)),
               ),
 
               /// LEVEL BADGE
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: barColor,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
-                  level,
-                  style: const TextStyle(
+                  level ?? '',
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: Colors.black,
+                    color: barColor.computeLuminance() > 0.6
+                        ? Colors.black
+                        : Colors.white,
                   ),
                 ),
               ),
             ],
           ),
 
-          const SizedBox(height: 6),
+          const SizedBox(height: 8),
 
           /// PROGRESS BAR
           ClipRRect(

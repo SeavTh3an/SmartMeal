@@ -131,39 +131,53 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
 
-            /// NUTRITION INFO
+            /// NUTRITION INFO (carded with app color)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                children: [
-                  NutritionRow(
-                    label: "Calories",
-                    level: widget.meal.nutrition.caloriesLevel(),
-                    icon: Icons.local_fire_department,
+              child: Card(
+                color: const Color(0xFFCBF4B1),
+                elevation: 2,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    children: [
+                      NutritionRow(
+                        label: "Calories",
+                        level: widget.meal.nutrition.caloriesLevel(),
+                        icon: Icons.local_fire_department,
+                      ),
+                      const Divider(),
+                      NutritionRow(
+                        label: "Protein",
+                        level: widget.meal.nutrition.proteinLevel(),
+                        icon: Icons.fitness_center,
+                      ),
+                      const Divider(),
+                      NutritionRow(
+                        label: "Sugar",
+                        level: widget.meal.nutrition.sugarLevel(),
+                        icon: Icons.cake,
+                      ),
+                      const Divider(),
+                      NutritionRow(
+                        label: "Fats",
+                        level: widget.meal.nutrition.fatLevel(),
+                        icon: Icons.opacity,
+                      ),
+                      const Divider(),
+                      NutritionRow(
+                        label: "Vegetable",
+                        icon: Icons.eco,
+                        booleanValue: widget.meal.nutrition.vegetables,
+                      ),
+                    ],
                   ),
-                  NutritionRow(
-                    label: "Protein",
-                    level: widget.meal.nutrition.proteinLevel(),
-                    icon: Icons.fitness_center,
-                  ),
-                  NutritionRow(
-                    label: "Sugar",
-                    level: widget.meal.nutrition.sugarLevel(),
-                    icon: Icons.cake,
-                  ),
-                  NutritionRow(
-                    label: "Fats",
-                    level: widget.meal.nutrition.fatLevel(),
-                    icon: Icons.opacity,
-                  ),
-                  NutritionRow(
-                    label: "Vegetable",
-                    level: widget.meal.nutrition.vegetableLevel(),
-                    icon: Icons.eco,
-                  ),
-                ],
+                ),
               ),
             ),
             const SizedBox(height: 30),
@@ -184,23 +198,13 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: _sectionContainer(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Wrap(
+                  spacing: 8,
+                  runSpacing: 6,
                   children: widget.meal.ingredients.map((ingredient) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text("•  ", style: TextStyle(fontSize: 16)),
-                          Expanded(
-                            child: Text(
-                              ingredient,
-                              style: const TextStyle(fontSize: 16),
-                            ),
-                          ),
-                        ],
-                      ),
+                    return Chip(
+                      backgroundColor: const Color(0xFFEFF7E6),
+                      label: Text(ingredient),
                     );
                   }).toList(),
                 ),

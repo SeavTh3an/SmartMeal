@@ -60,7 +60,8 @@ class _ListFoodScreenState extends State<ListFoodScreen> {
 
   void _searchMeals(String query) {
     final result = allMeals.where((meal) {
-      final matchesCategory = selectedCategory == null || meal.category == selectedCategory;
+      final matchesCategory =
+          selectedCategory == null || meal.category == selectedCategory;
       final matchesName = meal.name.toLowerCase().contains(query.toLowerCase());
       return matchesCategory && matchesName;
     }).toList();
@@ -103,6 +104,7 @@ class _ListFoodScreenState extends State<ListFoodScreen> {
                     title: 'All',
                     imagePath: 'assets/image/category_image/all.png',
                     small: true,
+                    selected: selectedCategory == null,
                     onTap: () => _onCategoryTap(null),
                   ),
                   const SizedBox(width: 12),
@@ -110,6 +112,7 @@ class _ListFoodScreenState extends State<ListFoodScreen> {
                     title: 'Khmer',
                     imagePath: 'assets/image/category_image/prohok_rmbg.png',
                     small: true,
+                    selected: selectedCategory == Category.khmerFood,
                     onTap: () => _onCategoryTap(Category.khmerFood),
                   ),
                   const SizedBox(width: 12),
@@ -117,6 +120,7 @@ class _ListFoodScreenState extends State<ListFoodScreen> {
                     title: 'Western',
                     imagePath: 'assets/image/category_image/steak_rmbg.png',
                     small: true,
+                    selected: selectedCategory == Category.westernFood,
                     onTap: () => _onCategoryTap(Category.westernFood),
                   ),
                   const SizedBox(width: 12),
@@ -124,6 +128,7 @@ class _ListFoodScreenState extends State<ListFoodScreen> {
                     title: 'Dessert',
                     imagePath: 'assets/image/category_image/dessert_rmbg.png',
                     small: true,
+                    selected: selectedCategory == Category.dessert,
                     onTap: () => _onCategoryTap(Category.dessert),
                   ),
                 ],

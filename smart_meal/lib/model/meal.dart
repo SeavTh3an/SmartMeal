@@ -77,11 +77,11 @@ class Meal {
     final value = (healthScore * 10).toStringAsFixed(1);
 
     if (healthScore < 0.4) {
-      return "Less healthy $value/10";
+      return "Less healthy ";
     } else if (healthScore < 0.7) {
-      return "Moderate $value/10";
+      return "Moderate ";
     } else {
-      return "Healthy $value/10";
+      return "Healthy";
     }
   }
 
