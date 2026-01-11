@@ -31,7 +31,7 @@ class _AddFoodScreenState extends State<AddFoodScreen> {
   void _submitMeal() {
     if (_formKey.currentState!.validate() && _selectedCategory != null) {
       final meal = Meal(
-        id: Meal.generateDisplayID(_selectedCategory!),
+        id: DateTime.now().millisecondsSinceEpoch.toString(), // unique ID
         name: _nameController.text.trim(),
         description: _descController.text.trim(),
         image: _imageController.text.trim().isEmpty
@@ -51,7 +51,9 @@ class _AddFoodScreenState extends State<AddFoodScreen> {
             .where((e) => e.isNotEmpty)
             .toList(),
         cookingInstructions: _instructionsController.text.trim(),
+        isUserCreated: true, // <-- important
       );
+
 
       MainScreen.of(context).addNewMealToList(meal);
 

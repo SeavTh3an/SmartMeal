@@ -18,6 +18,7 @@ class Meal {
     required this.nutrition,
     required this.ingredients,
     required this.cookingInstructions,
+    this.isUserCreated = false,
   });
 
   final String id;
@@ -28,6 +29,7 @@ class Meal {
   final Nutrition nutrition;
   final List<String> ingredients;
   final String cookingInstructions;
+  final bool isUserCreated;
 
   // ---------- ID GENERATION ----------
   static String generateDisplayID(Category category) {

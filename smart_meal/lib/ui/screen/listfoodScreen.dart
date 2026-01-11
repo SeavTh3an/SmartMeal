@@ -7,6 +7,7 @@ import '../widget/header/curveHead.dart';
 import '../widget/searchbar.dart';
 import 'mainScreen.dart';
 import '../widget/topNavigation.dart';
+import '../../data/meal_storagedata.dart';
 
 class ListFoodScreen extends StatefulWidget {
   final Category? initialCategory;
@@ -42,9 +43,10 @@ class ListFoodScreenState extends State<ListFoodScreen> {
   }
 
   Future<void> _loadMeals() async {
-    final loadedMeals = await MealLoader.loadMeals();
+    final assetMeals = await MealLoader.loadMeals();
+    final userMeals = await MealStorage.loadUserMeals();
     setState(() {
-      allMeals = loadedMeals;
+      allMeals = [...assetMeals, ...userMeals];
       _applyFilter();
       isLoading = false;
     });
@@ -80,12 +82,15 @@ class ListFoodScreenState extends State<ListFoodScreen> {
     });
   }
 
-  void addMeal(Meal meal) {
-    setState(() {
-      allMeals.add(meal);
-      _applyFilter();
-    });
-  }
+  void addMeal(Meal meal) async {
+  setState(() {
+    allMeals.add(meal);
+    _applyFilter();
+  });
+
+  final userMeals = allMeals.where((m) => m.isUserCreated).toList();
+  await MealStorage.saveUserMeals(userMeals);
+}
 
   // void refreshMeals() {
   //   setState(() {
