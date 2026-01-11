@@ -102,7 +102,7 @@ class _AddFoodScreenState extends State<AddFoodScreen> {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          // Header (styled like List/Selected)
+          // Header 
           SliverToBoxAdapter(
             child: CurvedHeader(
               title: 'Add Food',
@@ -217,23 +217,34 @@ class _AddFoodScreenState extends State<AddFoodScreen> {
                             : null,
                       ),
                     ),
-                    // Image path field
+                    // Image URL field
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          'Image Path (optional)',
+                          'Image URL (optional)',
                           style: TextStyle(fontWeight: FontWeight.w600),
                         ),
                         const SizedBox(height: 8),
                         TextFormField(
                           controller: _imageController,
                           decoration: const InputDecoration(
-                            hintText: 'assets/image/khmer_img/your_image.jpg',
+                            hintText: 'https://example.com/your_image.jpg',
                           ),
+                          keyboardType: TextInputType.url,
+                          validator: (value) {
+                            if (value != null && value.isNotEmpty) {
+                              // Simple URL validation
+                              final urlPattern = r'(http|https):\/\/([\w.]+\/?)\S*';
+                              final result = RegExp(urlPattern, caseSensitive: false).hasMatch(value);
+                              if (!result) return 'Please enter a valid URL';
+                            }
+                            return null;
+                          },
                         ),
                       ],
                     ),
+
                     // Nutrition box
                     _box(
                       title: 'Nutrition',

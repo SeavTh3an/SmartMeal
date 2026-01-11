@@ -66,7 +66,6 @@ class SelectedFoodScreenState extends State<SelectedFoodScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Meal> selectedMeals = MainScreen.of(context).selectedMealsList;
 
     return Scaffold(
       body: CustomScrollView(

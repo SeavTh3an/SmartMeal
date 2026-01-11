@@ -323,7 +323,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
       decoration: BoxDecoration(
         color: kBoxLightGreen.withOpacity(0.45),                 
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFDDEFD0), width: 1), 
+        border: Border.all(color: Color(0xFF2E7D32), width: 1), 
       ),
       child: child,
     );

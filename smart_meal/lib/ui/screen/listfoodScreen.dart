@@ -87,11 +87,11 @@ class ListFoodScreenState extends State<ListFoodScreen> {
     });
   }
 
-  void refreshMeals() {
-    setState(() {
-      _applyFilter();
-    });
-  }
+  // void refreshMeals() {
+  //   setState(() {
+  //     _applyFilter();
+  //   });
+  // }
 
   void _openTopMenu() {
     showModalBottomSheet(
