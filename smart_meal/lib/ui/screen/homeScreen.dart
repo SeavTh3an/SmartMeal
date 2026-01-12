@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import '../../model/meal.dart';
-import '../widget/categoryCard.dart';
+import '../../model/nutrition.dart';
+import '../../model/dailyLog.dart';
 import '../widget/header/homeHeader.dart';
 import '../widget/topNavigation.dart';
+import '../widget/home/todaySummaryCard.dart';
+import '../widget/home/todayWarningCard.dart';
+import '../widget/home/weeklySummaryCard.dart';
 import 'mainScreen.dart';
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -28,65 +31,123 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  DailyLog _buildTodayLog(List<Meal> meals) {
+    double cal = 0, protein = 0, sugar = 0, fat = 0;
+    bool veg = false;
+
+    for (final meal in meals) {
+      cal += meal.nutrition.calories;
+      protein += meal.nutrition.protein;
+      sugar += meal.nutrition.sugar;
+      fat += meal.nutrition.fat;
+      veg = veg || meal.nutrition.vegetables;
+    }
+
+    return DailyLog(
+      Nutrition(
+        calories: cal,
+        protein: protein,
+        sugar: sugar,
+        fat: fat,
+        vegetables: veg,
+      ),
+    );
+  }
+
+  String _greeting() {
+    final hour = DateTime.now().hour;
+    if (hour >= 5 && hour < 12) return "Good morning, here’s your health summary";
+    if (hour >= 12 && hour < 18) return "Good afternoon, here’s your health summary";
+    return "Good evening, here’s your health summary";
+  }
+
+  /// TEMP: build weekly logs. Replace this with your real 7-day aggregation
+  /// when you have daily data persisted with dates.
+  List<DailyLog> _buildWeeklyLogs(DailyLog todayLog) {
+    // For now, duplicate today across 7 days so the card renders.
+    return List<DailyLog>.generate(7, (_) => todayLog);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final selectedMeals = MainScreen.of(context).selectedMealsList;
+    final todayLog = _buildTodayLog(selectedMeals);
+    final weeklyLogs = _buildWeeklyLogs(todayLog); // TODO: replace with real weekly data
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header
+          // Header (unchanged)
           HomeHeader(
-            title: 'What should you\n    cook today ?',
+            title: 'What should you\ncook today?',
             imagePath: 'assets/image/western_img/salad_header.png',
             onMenuTap: _openTopMenu,
           ),
 
-          // Title
-          const Padding(
-            padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
-            child: Text(
-              'Choose Your Fav Category\nFor Today!',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-          ),
-
-          // Category Grid
+          // Tabs controller (Today | Weekly)
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: GridView.count(
-                crossAxisCount: 2,
-                mainAxisSpacing: 16,
-                crossAxisSpacing: 16,
-                childAspectRatio: 0.85,
+            child: DefaultTabController(
+              length: 2,
+              child: Column(
                 children: [
-                  CategoryCard(
-                    title: 'Khmer',
-                    imagePath: 'assets/image/category_image/prohok_rmbg.png',
-                    onTap: () {
-                      MainScreen.of(
-                        context,
-                      ).openListFoodWithCategory(Category.khmerFood);
-                    },
+                  // Greeting section
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        _greeting(),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF1F3A22),
+                        ),
+                      ),
+                    ),
                   ),
-                  CategoryCard(
-                    title: 'Western',
-                    imagePath: 'assets/image/category_image/steak_rmbg.png',
-                    onTap: () {
-                      MainScreen.of(
-                        context,
-                      ).openListFoodWithCategory(Category.westernFood);
-                    },
+
+                  // Segmented tabs (Today / Weekly)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: TabBar(
+                      labelColor: Colors.white,
+                      unselectedLabelColor: Colors.black87,
+                      indicator: BoxDecoration(
+                        color: const Color(0xFF1F3A22), // dark green like Add screen
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                      tabs: const [
+                        Tab(text: 'Today'),
+                        Tab(text: 'Weekly'),
+                      ],
+                    ),
                   ),
-                  CategoryCard(
-                    title: 'Dessert',
-                    imagePath: 'assets/image/category_image/dessert_rmbg.png',
-                    onTap: () {
-                      MainScreen.of(
-                        context,
-                      ).openListFoodWithCategory(Category.dessert);
-                    },
+
+                  // Tab content
+                  Expanded(
+                    child: TabBarView(
+                      children: [
+                        // === Today tab ===
+                        ListView(
+                          padding: const EdgeInsets.only(bottom: 24),
+                          children: [
+                            const SizedBox(height: 12),
+                            TodaySummaryCard(log: todayLog),
+                            TodayWarningCard(log: todayLog),
+                          ],
+                        ),
+
+                        // === Weekly tab ===
+                        ListView(
+                          padding: const EdgeInsets.only(bottom: 24),
+                          children: [
+                            const SizedBox(height: 16),
+                            WeeklySummaryCard(weeklyLogs: weeklyLogs),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
