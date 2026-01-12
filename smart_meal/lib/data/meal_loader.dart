@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../model/meal.dart';
+import '../model/selectedMeal.dart';
 
 class MealLoader {
   static final List<Meal> _runtimeMeals = [];
@@ -21,4 +23,19 @@ class MealLoader {
   static void addMeal(Meal meal) {
     _runtimeMeals.add(meal);
   }
+  
+  static const _kSelectedMealsKey = 'selected_meals';
+
+Future<void> saveSelectedMeal(SelectedMeal sel) async {
+  final prefs = await SharedPreferences.getInstance();
+  final list = prefs.getStringList(_kSelectedMealsKey) ?? <String>[];
+  list.add(jsonEncode(sel.toJson()));
+  await prefs.setStringList(_kSelectedMealsKey, list);
+}
+
+Future<List<SelectedMeal>> loadSelectedMeals() async {
+  final prefs = await SharedPreferences.getInstance();
+  final list = prefs.getStringList(_kSelectedMealsKey) ?? <String>[];
+  return list.map((s) => SelectedMeal.fromJson(jsonDecode(s))).toList();
+}
 }

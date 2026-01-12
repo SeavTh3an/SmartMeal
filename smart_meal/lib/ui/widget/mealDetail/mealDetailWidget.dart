@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:smart_meal/model/nutrition.dart';
 import '../../../model/meal.dart';
 import 'nutritionRow.dart';
+import 'package:uuid/uuid.dart';
+import '../../../data/meal_loader.dart';
+import '../../../model/selectedMeal.dart';
 
-class MealDetailWidget extends StatelessWidget {
+class MealDetailWidget extends StatefulWidget {
   final Meal meal;
   final bool isSelected;
 
@@ -24,6 +27,11 @@ class MealDetailWidget extends StatelessWidget {
   static const Color kRed           = Color(0xFFE85C5C);
   static const Color kBoxLightGreen = Color(0xFFCBF4B1);
 
+  @override
+  State<MealDetailWidget> createState() => _MealDetailWidgetState();
+}
+
+class _MealDetailWidgetState extends State<MealDetailWidget> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -51,7 +59,7 @@ class MealDetailWidget extends StatelessWidget {
                 left: 16,
                 child: IconButton(
                   icon: const Icon(Icons.arrow_back, color: Colors.black),
-                  onPressed: onBack,
+                  onPressed: widget.onBack,
                 ),
               ),
               const Positioned(
@@ -88,7 +96,7 @@ class MealDetailWidget extends StatelessWidget {
                     ),
                     child: ClipOval(
                       child: Image.asset(
-                        meal.image,
+                        widget.meal.image,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -102,11 +110,11 @@ class MealDetailWidget extends StatelessWidget {
 
           //meal name
           Text(
-            meal.name,
+            widget.meal.name,
             style: const TextStyle(
               fontSize: 26,
               fontWeight: FontWeight.bold,
-              color: kDarkGreen,
+              color: MealDetailWidget.kDarkGreen,
             ),
           ),
           const SizedBox(height: 6),
@@ -115,7 +123,7 @@ class MealDetailWidget extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Text(
-              meal.description,
+              widget.meal.description,
               style: const TextStyle(fontSize: 16, color: Colors.grey),
             ),
           ),
@@ -131,7 +139,7 @@ class MealDetailWidget extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: kDarkGreen,
+                  color: MealDetailWidget.kDarkGreen,
                 ),
               ),
             ),
@@ -142,38 +150,38 @@ class MealDetailWidget extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: _SectionCard(
-              background: kBoxLightGreen.withOpacity(0.45),
+              background: MealDetailWidget.kBoxLightGreen.withOpacity(0.45),
               borderColor: const Color(0xFF2E7D32),
               child: Column(
                 children: [
                   NutritionRow(
                     label: "Calories",
-                    levelText: meal.nutrition.caloriesLevel(),
+                    levelText: widget.meal.nutrition.caloriesLevel(),
                     icon: Icons.local_fire_department,
                   ),
                   const Divider(height: 16),
                   NutritionRow(
                     label: "Protein",
-                    levelText: meal.nutrition.proteinLevel(),
+                    levelText: widget.meal.nutrition.proteinLevel(),
                     icon: Icons.fitness_center,
                   ),
                   const Divider(height: 16),
                   NutritionRow(
                     label: "Sugar",
-                    levelText: meal.nutrition.sugarLevel(),
+                    levelText: widget.meal.nutrition.sugarLevel(),
                     icon: Icons.cake,
                   ),
                   const Divider(height: 16),
                   NutritionRow(
                     label: "Fats",
-                    levelText: meal.nutrition.fatLevel(),
+                    levelText: widget.meal.nutrition.fatLevel(),
                     icon: Icons.opacity,
                   ),
                   const Divider(height: 16),
                   NutritionRow(
                     label: "Vegetable",
                     icon: Icons.eco,
-                    booleanValue: meal.nutrition.vegetables,
+                    booleanValue: widget.meal.nutrition.vegetables,
                   ),
                 ],
               ),
@@ -191,7 +199,7 @@ class MealDetailWidget extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: kDarkGreen,
+                  color: MealDetailWidget.kDarkGreen,
                 ),
               ),
             ),
@@ -201,12 +209,12 @@ class MealDetailWidget extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: _SectionCard(
-              background: kBoxLightGreen.withOpacity(0.45),
+              background: MealDetailWidget.kBoxLightGreen.withOpacity(0.45),
               borderColor: const Color(0xFF2E7D32),
               child: Wrap(
                 spacing: 8,
                 runSpacing: 6,
-                children: meal.ingredients.map((ingredient) {
+                children: widget.meal.ingredients.map((ingredient) {
                   return Chip(
                     backgroundColor: Colors.white,
                     shape: StadiumBorder(
@@ -214,7 +222,7 @@ class MealDetailWidget extends StatelessWidget {
                     ),
                     label: Text(
                       ingredient,
-                      style: const TextStyle(color: kDarkGreen),
+                      style: const TextStyle(color: MealDetailWidget.kDarkGreen),
                     ),
                   );
                 }).toList(),
@@ -233,7 +241,7 @@ class MealDetailWidget extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: kDarkGreen,
+                  color: MealDetailWidget.kDarkGreen,
                 ),
               ),
             ),
@@ -243,10 +251,10 @@ class MealDetailWidget extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: _SectionCard(
-              background: kBoxLightGreen.withOpacity(0.45),
+              background: MealDetailWidget.kBoxLightGreen.withOpacity(0.45),
               borderColor: const Color(0xFF2E7D32),
               child: Text(
-                meal.cookingInstructions,
+                widget.meal.cookingInstructions,
                 style: const TextStyle(fontSize: 16, height: 1.5),
               ),
             ),
@@ -260,17 +268,17 @@ class MealDetailWidget extends StatelessWidget {
               children: [
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: onCancel,
+                    onPressed: widget.onCancel,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
-                      side: const BorderSide(color: kRed),
+                      side: const BorderSide(color: MealDetailWidget.kRed),
                       shape: const StadiumBorder(),
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       elevation: 0,
                     ),
                     child: const Text(
                       "Cancel",
-                      style: TextStyle(fontSize: 16, color: kRed),
+                      style: TextStyle(fontSize: 16, color: MealDetailWidget.kRed),
                     ),
                   ),
                 ),
@@ -278,19 +286,19 @@ class MealDetailWidget extends StatelessWidget {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      if (onToggleSelected != null) {
-                        onToggleSelected!(!isSelected);
+                      if (widget.onToggleSelected != null) {
+                        widget.onToggleSelected!(!widget.isSelected);
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: isSelected ? kRed : kDarkGreen,
+                      backgroundColor: widget.isSelected ? MealDetailWidget.kRed : MealDetailWidget.kDarkGreen,
                       foregroundColor: Colors.white,
                       shape: const StadiumBorder(),
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       elevation: 0,
                     ),
                     child: Text(
-                      isSelected ? "Unselect" : "Select",
+                      widget.isSelected ? "Unselect" : "Select",
                       style: const TextStyle(fontSize: 16),
                     ),
                   ),
