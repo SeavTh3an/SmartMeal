@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 import 'package:smart_meal/model/meal.dart';
+import 'package:smart_meal/model/selectedMeal.dart';
+import '../../data/selected_meal_storage.dart';
 import 'homeScreen.dart';
 import 'listfoodScreen.dart';
 import 'addfoodScreen.dart';
@@ -28,8 +31,33 @@ class _MainScreenState extends State<MainScreen> {
   Category? selectedCategory;
 
   final List<Meal> selectedMeals = [];
+  final List<SelectedMeal> selectedMealEntries = [];
 
   List<Meal> get selectedMealsList => selectedMeals;
+  List<SelectedMeal> get selectedMealEntriesList => selectedMealEntries;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSelectedEntries();
+  }
+
+  Future<void> _loadSelectedEntries() async {
+    final List<SelectedMeal> entries =
+        await SelectedMealStorage.loadSelectedMealEntries();
+    selectedMealEntries.clear();
+    selectedMealEntries.addAll(entries);
+    // Note: selectedMeals (Meal objects) will be filled as meals are selected or left empty; UI checks use selectedMealEntries
+    selectedFoodKey.currentState?.refresh();
+  }
+
+  Future<void> _saveSelectedEntries() async {
+    await SelectedMealStorage.saveSelectedMealEntries(selectedMealEntries);
+  }
+
+  bool isMealSelected(Meal meal) {
+    return selectedMealEntries.any((e) => e.mealId == meal.id);
+  }
 
   void changeTab(int index) {
     setState(() {
@@ -52,11 +80,61 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
+  /// Add one or multiple SelectedMeal entries for a meal (preserves meal object in selectedMeals)
+  Future<void> addSelectedMealEntriesForMeal(
+    Meal meal,
+    List<MealTime> mealTimes,
+  ) async {
+    if (mealTimes.isEmpty) return;
+    final uid = const Uuid();
+    for (final mt in mealTimes) {
+      final exists = selectedMealEntries.any(
+        (e) => e.mealId == meal.id && e.mealTime == mt,
+      );
+      if (exists) continue;
+      final entry = SelectedMeal(
+        id: uid.v4(),
+        mealId: meal.id,
+        mealTime: mt,
+        date: DateTime.now(),
+      );
+      selectedMealEntries.add(entry);
+    }
+
+    // ensure the meal object is in the selectedMeals list for compatibility with existing code
+    addSelectedMeal(meal);
+
+    await _saveSelectedEntries();
+    selectedFoodKey.currentState?.refresh();
+  }
+
   void removeSelectedMeal(Meal meal) {
     if (selectedMeals.contains(meal)) {
       selectedMeals.remove(meal);
-      selectedFoodKey.currentState?.refresh();
     }
+    // also remove any selected entries for this meal
+    selectedMealEntries.removeWhere((e) => e.mealId == meal.id);
+    _saveSelectedEntries();
+    selectedFoodKey.currentState?.refresh();
+  }
+
+  /// Remove specific meal-time entries for a meal; if none remain, also unmark the meal
+  void removeSelectedMealEntriesForMealTimes(Meal meal, List<MealTime> times) {
+    if (times.isEmpty) return;
+    selectedMealEntries.removeWhere(
+      (e) => e.mealId == meal.id && times.contains(e.mealTime),
+    );
+
+    final remainingForMeal = selectedMealEntries.where(
+      (e) => e.mealId == meal.id,
+    );
+    if (remainingForMeal.isEmpty) {
+      // no more times selected for this meal -> remove meal from selectedMeals
+      selectedMeals.remove(meal);
+    }
+
+    _saveSelectedEntries();
+    selectedFoodKey.currentState?.refresh();
   }
 
   void addNewMealToList(Meal meal) {
@@ -70,10 +148,7 @@ class _MainScreenState extends State<MainScreen> {
         index: _currentIndex,
         children: [
           HomeScreen(),
-          ListFoodScreen(
-            key: listFoodKey,
-            initialCategory: selectedCategory,
-          ),
+          ListFoodScreen(key: listFoodKey, initialCategory: selectedCategory),
           AddFoodScreen(), // calls addNewMealToList
           SelectedFoodScreen(key: selectedFoodKey),
         ],
@@ -87,9 +162,18 @@ class _MainScreenState extends State<MainScreen> {
         type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.food_bank), label: 'List Food'),
-          BottomNavigationBarItem(icon: Icon(Icons.add_circle), label: 'Add Food'),
-          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Selected'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.food_bank),
+            label: 'List Food',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add_circle),
+            label: 'Add Food',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: 'Selected',
+          ),
         ],
       ),
     );

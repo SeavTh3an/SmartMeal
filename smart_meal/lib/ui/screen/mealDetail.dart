@@ -39,8 +39,56 @@ class MealDetailScreen extends StatelessWidget {
               Navigator.pop(context, picked);
             }
           } else {
-            MainScreen.of(context).removeSelectedMeal(meal);
-            Navigator.pop(context, 'removed');
+            // Show dialog pre-filled with current selected meal times for this meal
+            final entries = MainScreen.of(context).selectedMealEntriesList
+                .where((e) => e.mealId == meal.id)
+                .toList();
+
+            final bool initialBreakfast = entries.any(
+              (e) => e.mealTime == MealTime.breakfast,
+            );
+            final bool initialLunch = entries.any(
+              (e) => e.mealTime == MealTime.lunch,
+            );
+            final bool initialDinner = entries.any(
+              (e) => e.mealTime == MealTime.dinner,
+            );
+
+            final List<MealTime>? picked = await showDialog<List<MealTime>>(
+              context: context,
+              barrierDismissible: false,
+              builder: (_) => MealTimeDialog(
+                initialBreakfast: initialBreakfast,
+                initialLunch: initialLunch,
+                initialDinner: initialDinner,
+              ),
+            );
+
+            if (picked != null) {
+              final currentTimes = <MealTime>[];
+              if (initialBreakfast) currentTimes.add(MealTime.breakfast);
+              if (initialLunch) currentTimes.add(MealTime.lunch);
+              if (initialDinner) currentTimes.add(MealTime.dinner);
+
+              // times to remove are those currently selected but not present in picked
+              final toRemove = currentTimes
+                  .where((t) => !picked.contains(t))
+                  .toList();
+
+              if (toRemove.isNotEmpty) {
+                MainScreen.of(
+                  context,
+                ).removeSelectedMealEntriesForMealTimes(meal, toRemove);
+              }
+
+              if (picked.isEmpty) {
+                // all removed
+                Navigator.pop(context, 'removed');
+              } else {
+                // partially updated
+                Navigator.pop(context, 'updated');
+              }
+            }
           }
         },
       ),

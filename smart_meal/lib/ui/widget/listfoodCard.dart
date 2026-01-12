@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_meal/model/selectedMeal.dart';
 import '../../model/meal.dart';
 import '../screen/mealDetail.dart';
 import '../screen/mainScreen.dart';
@@ -142,12 +143,24 @@ class ListfoodCard extends StatelessWidget {
       MaterialPageRoute(
         builder: (_) => MealDetailScreen(
           meal: meal,
-          isSelected: MainScreen.of(context).selectedMealsList.contains(meal),
+          isSelected: MainScreen.of(context).isMealSelected(meal),
         ),
       ),
     );
 
-    if (selected == true) {
+    // If MealDetail returned a list of MealTime, add entries for those meal times
+    if (selected is List<MealTime>) {
+      if (selected.isNotEmpty) {
+        await MainScreen.of(
+          context,
+        ).addSelectedMealEntriesForMeal(meal, selected);
+        MainScreen.of(context).changeTab(3);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Added to selected meals')),
+        );
+      }
+    } else if (selected == true) {
+      // fallback: boolean true (legacy) -> just mark as selected without times
       MainScreen.of(context).addSelectedMeal(meal);
       MainScreen.of(context).changeTab(3);
       ScaffoldMessenger.of(
@@ -158,6 +171,10 @@ class ListfoodCard extends StatelessWidget {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Removed from selected meals')),
       );
+    } else if (selected == 'updated') {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Selection updated')));
     }
   }
 }

@@ -2,7 +2,16 @@ import 'package:flutter/material.dart';
 import '../../../model/selectedMeal.dart';
 
 class MealTimeDialog extends StatefulWidget {
-  const MealTimeDialog({super.key});
+  final bool initialBreakfast;
+  final bool initialLunch;
+  final bool initialDinner;
+
+  const MealTimeDialog({
+    super.key,
+    this.initialBreakfast = false,
+    this.initialLunch = false,
+    this.initialDinner = false,
+  });
 
   @override
   State<MealTimeDialog> createState() => _MealTimeDialogState();
@@ -12,6 +21,14 @@ class _MealTimeDialogState extends State<MealTimeDialog> {
   bool breakfast = false;
   bool lunch = false;
   bool dinner = false;
+
+  @override
+  void initState() {
+    super.initState();
+    breakfast = widget.initialBreakfast;
+    lunch = widget.initialLunch;
+    dinner = widget.initialDinner;
+  }
 
   Widget _mealOption({
     required String title,
@@ -26,9 +43,7 @@ class _MealTimeDialogState extends State<MealTimeDialog> {
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
         margin: const EdgeInsets.only(bottom: 10),
         decoration: BoxDecoration(
-          color: value
-              ? Colors.green.withOpacity(0.12)
-              : Colors.grey.shade100,
+          color: value ? Colors.green.withOpacity(0.12) : Colors.grey.shade100,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: value ? Colors.green : Colors.transparent,
@@ -44,8 +59,7 @@ class _MealTimeDialogState extends State<MealTimeDialog> {
                 title,
                 style: TextStyle(
                   fontSize: 15,
-                  fontWeight:
-                      value ? FontWeight.w600 : FontWeight.w500,
+                  fontWeight: value ? FontWeight.w600 : FontWeight.w500,
                 ),
               ),
             ),
@@ -64,9 +78,7 @@ class _MealTimeDialogState extends State<MealTimeDialog> {
   Widget build(BuildContext context) {
     return Dialog(
       backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -76,15 +88,11 @@ class _MealTimeDialogState extends State<MealTimeDialog> {
             // Header
             Row(
               children: const [
-                Icon(Icons.restaurant_menu,
-                    color: Colors.green, size: 26),
+                Icon(Icons.restaurant_menu, color: Colors.green, size: 26),
                 SizedBox(width: 10),
                 Text(
                   'Select Meal Time',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -120,9 +128,10 @@ class _MealTimeDialogState extends State<MealTimeDialog> {
                     style: OutlinedButton.styleFrom(
                       shape: const StadiumBorder(),
                     ),
-                    child: Text('Cancel', style: TextStyle(
-                      color: Colors.grey[700],
-                    )),
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(color: Colors.grey[700]),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -141,9 +150,10 @@ class _MealTimeDialogState extends State<MealTimeDialog> {
                       backgroundColor: Colors.green,
                       shape: const StadiumBorder(),
                     ),
-                    child: Text('Confirm', style: TextStyle(
-                      color: Colors.white,
-                    )),
+                    child: Text(
+                      'Confirm',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
               ],

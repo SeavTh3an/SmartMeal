@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../model/meal.dart';
+import '../../model/selectedMeal.dart';
 import '../widget/header/curveHead.dart';
 import '../widget/topNavigation.dart';
 import '../widget/categoryCard.dart';
@@ -18,16 +19,25 @@ class SelectedFoodScreenState extends State<SelectedFoodScreen> {
   Category? selectedCategory;
   List<Meal> allMeals = [];
   List<Meal> filteredMeals = [];
+
+  // New: selected entries and grouping by meal time
+  List<SelectedMeal> selectedEntries = [];
+  List<Meal> breakfastMeals = [];
+  List<Meal> lunchMeals = [];
+  List<Meal> dinnerMeals = [];
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     allMeals = MainScreen.of(context).selectedMealsList;
+    selectedEntries = MainScreen.of(context).selectedMealEntriesList;
     _applyFilter();
     setState(() {});
   }
 
   void refresh() {
     allMeals = MainScreen.of(context).selectedMealsList;
+    selectedEntries = MainScreen.of(context).selectedMealEntriesList;
     _applyFilter();
     setState(() {});
   }
@@ -55,6 +65,31 @@ class SelectedFoodScreenState extends State<SelectedFoodScreen> {
   }
 
   void _applyFilter() {
+    // Map selected entries to Meal objects and split by mealTime
+    breakfastMeals = [];
+    lunchMeals = [];
+    dinnerMeals = [];
+
+    for (final entry in selectedEntries) {
+      final matched = allMeals.where((m) => m.id == entry.mealId);
+      if (matched.isEmpty) continue;
+      final meal = matched.first;
+      if (selectedCategory != null && meal.category != selectedCategory)
+        continue;
+      switch (entry.mealTime) {
+        case MealTime.breakfast:
+          if (!breakfastMeals.contains(meal)) breakfastMeals.add(meal);
+          break;
+        case MealTime.lunch:
+          if (!lunchMeals.contains(meal)) lunchMeals.add(meal);
+          break;
+        case MealTime.dinner:
+          if (!dinnerMeals.contains(meal)) dinnerMeals.add(meal);
+          break;
+      }
+    }
+
+    // Also maintain filteredMeals for compatibility (all selected meals filtered by category)
     if (selectedCategory == null) {
       filteredMeals = allMeals;
     } else {
@@ -66,7 +101,6 @@ class SelectedFoodScreenState extends State<SelectedFoodScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -133,7 +167,7 @@ class SelectedFoodScreenState extends State<SelectedFoodScreen> {
           SliverPadding(
             padding: const EdgeInsets.only(bottom: 16),
             sliver: SliverToBoxAdapter(
-              child: allMeals.isEmpty
+              child: selectedEntries.isEmpty
                   ? const Padding(
                       padding: EdgeInsets.only(top: 40),
                       child: Center(
@@ -143,20 +177,91 @@ class SelectedFoodScreenState extends State<SelectedFoodScreen> {
                         ),
                       ),
                     )
-                  : (filteredMeals.isEmpty
-                        ? const Padding(
-                            padding: EdgeInsets.only(top: 40),
-                            child: Center(
-                              child: Text(
-                                "No meals in this category",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.grey,
-                                ),
-                              ),
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Breakfast
+                        const Padding(
+                          padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
+                          child: Text(
+                            'Breakfast',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
                             ),
-                          )
-                        : ListfoodCard(meals: filteredMeals)),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 0),
+                          child: breakfastMeals.isEmpty
+                              ? const Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 8,
+                                  ),
+                                  child: Text(
+                                    'No breakfast selected',
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                )
+                              : ListfoodCard(meals: breakfastMeals),
+                        ),
+
+                        // Lunch
+                        const Padding(
+                          padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
+                          child: Text(
+                            'Lunch',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 0),
+                          child: lunchMeals.isEmpty
+                              ? const Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 8,
+                                  ),
+                                  child: Text(
+                                    'No lunch selected',
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                )
+                              : ListfoodCard(meals: lunchMeals),
+                        ),
+
+                        // Dinner
+                        const Padding(
+                          padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
+                          child: Text(
+                            'Dinner',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 0),
+                          child: dinnerMeals.isEmpty
+                              ? const Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 8,
+                                  ),
+                                  child: Text(
+                                    'No dinner selected',
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                )
+                              : ListfoodCard(meals: dinnerMeals),
+                        ),
+                      ],
+                    ),
             ),
           ),
         ],
