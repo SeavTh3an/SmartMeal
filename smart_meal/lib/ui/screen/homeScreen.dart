@@ -118,20 +118,24 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     );
   }
 
+  
   List<DailyLog> _buildWeeklyLogs(
     DateTime endDate,
     List<SelectedMeal> selections,
     Map<String, Meal> mealMap,
   ) {
-    final out = <DailyLog>[];
-    final end = DateTime(endDate.year, endDate.month, endDate.day);
+    // Monday of current week
+    final today = DateTime(endDate.year, endDate.month, endDate.day);
+    final monday = today.subtract(Duration(days: today.weekday - 1));
 
-    for (int i = 6; i >= 0; i--) {
-      final day = end.subtract(Duration(days: i));
+    final out = <DailyLog>[];
+    for (int i = 0; i < 7; i++) {
+      final day = monday.add(Duration(days: i));
       out.add(_buildDailyLog(day, selections, mealMap));
     }
     return out;
   }
+
 
   @override
   Widget build(BuildContext context) {

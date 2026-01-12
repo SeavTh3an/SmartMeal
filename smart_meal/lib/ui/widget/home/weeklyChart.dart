@@ -2,27 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../../model/dailyLog.dart';
 import '../../../model/recommendation.dart';
+import '../../theme/weekColor.dart';
 
 class WeeklyChart extends StatelessWidget {
   final List<DailyLog> logs;
   const WeeklyChart({super.key, required this.logs});
 
-  static const double _barWidth = 18;
+  static const double _barWidth = 12;
 
   @override
   Widget build(BuildContext context) {
     if (logs.isEmpty) return const SizedBox();
 
-    // Recommended composite grams for chart (protein + sugar only)
-    final recommendedTotal = Recommendation.protein + Recommendation.sugar;
-
-    final highestTotal = logs
-        .map((e) => e.total.protein + e.total.sugar)
-        .fold<double>(0, (a, b) => a > b ? a : b);
-
-    final maxY = (highestTotal > recommendedTotal ? highestTotal : recommendedTotal) * 1.25;
+    // Calculate sensible Y-axis max (covers both targets and highest values)
+    final highestProtein = logs.map((e) => e.total.protein).fold<double>(0, (a, b) => a > b ? a : b);
+    final highestSugar   = logs.map((e) => e.total.sugar).fold<double>(0, (a, b) => a > b ? a : b);
+    final baseMax = [
+      highestProtein,
+      highestSugar,
+      Recommendation.protein,
+      Recommendation.sugar,
+    ].reduce((a, b) => a > b ? a : b);
+    final maxY = baseMax * 1.25;
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Legend
         Padding(
@@ -31,8 +35,8 @@ class WeeklyChart extends StatelessWidget {
             spacing: 12,
             runSpacing: 6,
             children: const [
-              _LegendSwatch(color: Colors.green, label: 'Protein (g)'),
-              _LegendSwatch(color: Colors.red, label: 'Sugar (g)'),
+              _LegendSwatch(color: WeekColors.protein, label: 'Protein (g)'),
+              _LegendSwatch(color: WeekColors.sugar,   label: 'Sugar (g)'),
             ],
           ),
         ),
@@ -52,10 +56,11 @@ class WeeklyChart extends StatelessWidget {
                       final i = value.toInt();
                       if (i < 0 || i >= logs.length) return const SizedBox.shrink();
                       final d = logs[i].date;
-                      final label = _weekday(d.weekday);
+                      final label = _weekdayLabel(d.weekday);
+                      final color = WeekColors.weekdayTint(d.weekday);
                       return Padding(
                         padding: const EdgeInsets.only(top: 6),
-                        child: Text(label),
+                        child: Text(label, style: TextStyle(color: color, fontWeight: FontWeight.w700)),
                       );
                     },
                   ),
@@ -71,14 +76,25 @@ class WeeklyChart extends StatelessWidget {
               extraLinesData: ExtraLinesData(
                 horizontalLines: [
                   HorizontalLine(
-                    y: recommendedTotal,
-                    color: Colors.orange,
+                    y: Recommendation.protein,
+                    color: WeekColors.protein,
                     strokeWidth: 2,
                     dashArray: [6, 6],
                     label: HorizontalLineLabel(
                       show: true,
-                      labelResolver: (_) => 'Recommended total (g)',
-                      style: const TextStyle(color: Colors.orange),
+                      labelResolver: (_) => 'Protein target (${Recommendation.protein.toStringAsFixed(0)}g)',
+                      style: const TextStyle(color: WeekColors.protein),
+                    ),
+                  ),
+                  HorizontalLine(
+                    y: Recommendation.sugar,
+                    color: WeekColors.sugar,
+                    strokeWidth: 2,
+                    dashArray: [6, 6],
+                    label: HorizontalLineLabel(
+                      show: true,
+                      labelResolver: (_) => 'Sugar limit (${Recommendation.sugar.toStringAsFixed(0)}g)',
+                      style: const TextStyle(color: WeekColors.sugar),
                     ),
                   ),
                 ],
@@ -93,22 +109,23 @@ class WeeklyChart extends StatelessWidget {
   }
 
   List<BarChartGroupData> _barGroups() {
+    // Grouped bars: two rods per day (protein + sugar)
     return logs.asMap().entries.map((entry) {
       final index = entry.key;
       final n = entry.value.total;
-      final protein = n.protein;
-      final sugar = n.sugar;
-      final sum = protein + sugar;
-
       return BarChartGroupData(
         x: index,
+        barsSpace: 8, // spacing between rods
         barRods: [
           BarChartRodData(
-            toY: sum,
-            rodStackItems: [
-              BarChartRodStackItem(0, protein, Colors.green),
-              BarChartRodStackItem(protein, sum, Colors.red),
-            ],
+            toY: n.protein,
+            color: WeekColors.protein,
+            width: _barWidth,
+            borderRadius: BorderRadius.circular(6),
+          ),
+          BarChartRodData(
+            toY: n.sugar,
+            color: WeekColors.sugar,
             width: _barWidth,
             borderRadius: BorderRadius.circular(6),
           ),
@@ -117,7 +134,7 @@ class WeeklyChart extends StatelessWidget {
     }).toList();
   }
 
-  String _weekday(int w) => const ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][w - 1];
+  String _weekdayLabel(int w) => const ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][w - 1];
 }
 
 class _LegendSwatch extends StatelessWidget {
