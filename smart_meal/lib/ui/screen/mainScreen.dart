@@ -69,7 +69,7 @@ class _MainScreenState extends State<MainScreen> {
       body: IndexedStack(
         index: _currentIndex,
         children: [
-          const HomeScreen(),
+          HomeScreen(),
           ListFoodScreen(
             key: listFoodKey,
             initialCategory: selectedCategory,
