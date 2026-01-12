@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:uuid/uuid.dart';
+
 import '../../model/meal.dart';
-import '../widget/mealDetail/mealDetailWidget.dart';
-import '../../data/meal_loader.dart';
 import '../../model/selectedMeal.dart';
+import '../widget/mealDetail/mealDetailWidget.dart';
+import '../widget/mealDetail/dialog.dart';
+import 'mainScreen.dart';
 
 class MealDetailScreen extends StatelessWidget {
   final Meal meal;
@@ -24,15 +25,25 @@ class MealDetailScreen extends StatelessWidget {
         isSelected: isSelected,
         onBack: () => Navigator.pop(context),
         onCancel: () => Navigator.pop(context),
-        onToggleSelected: (nextSelected) {
+        onToggleSelected: (nextSelected) async {
           if (nextSelected) {
-            Navigator.pop(context, true);     
+            // Open custom meal time dialog
+            final List<MealTime>? picked = await showDialog<List<MealTime>>(
+              context: context,
+              barrierDismissible: false,
+              builder: (_) => const MealTimeDialog(),
+            );
+
+            if (picked != null && picked.isNotEmpty) {
+              // return the picked times to the caller so it can persist from the parent context
+              Navigator.pop(context, picked);
+            }
           } else {
-            Navigator.pop(context, 'removed'); 
+            MainScreen.of(context).removeSelectedMeal(meal);
+            Navigator.pop(context, 'removed');
           }
         },
       ),
     );
   }
 }
-

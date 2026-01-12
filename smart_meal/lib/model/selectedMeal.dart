@@ -1,3 +1,4 @@
+
 enum MealTime { breakfast, lunch, dinner }
 
 class SelectedMeal {
