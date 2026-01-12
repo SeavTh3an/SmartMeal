@@ -14,39 +14,34 @@ class HomeToggleTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.grey.shade200,
-          borderRadius: BorderRadius.circular(24),
-        ),
-        child: Row(
-          children: HomeView.values.map((view) {
-            final selected = view == current;
-
-            return Expanded(
-              child: GestureDetector(
-                onTap: () => onChanged(view),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  decoration: BoxDecoration(
-                    color: selected ? Colors.white : Colors.transparent,
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                  child: Text(
-                    view == HomeView.today ? 'Today' : 'Weekly',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontWeight:
-                          selected ? FontWeight.bold : FontWeight.normal,
-                    ),
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.grey.shade200,
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: Row(
+        children: HomeView.values.map((view) {
+          final selected = view == current;
+          return Expanded(
+            child: GestureDetector(
+              onTap: () => onChanged(view),
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                decoration: BoxDecoration(
+                  color: selected ? Colors.white : Colors.transparent,
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                child: Text(
+                  view == HomeView.today ? 'Today' : 'Weekly',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: selected ? FontWeight.bold : FontWeight.normal,
                   ),
                 ),
               ),
-            );
-          }).toList(),
-        ),
+            ),
+          );
+        }).toList(),
       ),
     );
   }
