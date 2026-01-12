@@ -138,43 +138,45 @@ class ListfoodCard extends StatelessWidget {
   }
 
   void _showMealDetail(BuildContext context, Meal meal) async {
-    final selected = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => MealDetailScreen(
-          meal: meal,
-          isSelected: MainScreen.of(context).isMealSelected(meal),
-        ),
+  final result = await Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (_) => MealDetailScreen(
+        meal: meal,
+        isSelected: MainScreen.of(context).isMealSelected(meal),
       ),
-    );
+    ),
+  );
 
-    // If MealDetail returned a list of MealTime, add entries for those meal times
-    if (selected is List<MealTime>) {
-      if (selected.isNotEmpty) {
-        await MainScreen.of(
-          context,
-        ).addSelectedMealEntriesForMeal(meal, selected);
-        MainScreen.of(context).changeTab(3);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Added to selected meals')),
-        );
-      }
-    } else if (selected == true) {
-      // fallback: boolean true (legacy) -> just mark as selected without times
-      MainScreen.of(context).addSelectedMeal(meal);
-      MainScreen.of(context).changeTab(3);
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Added to selected meals')));
-    } else if (selected == 'removed') {
-      MainScreen.of(context).removeSelectedMeal(meal);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Removed from selected meals')),
-      );
-    } else if (selected == 'updated') {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Selection updated')));
-    }
+  final main = MainScreen.of(context);
+
+  // ===== ADD =====
+  if (result is List<MealTime>) {
+    await main.addSelectedMealEntriesForMeal(meal, result);
+    main.changeTab(3);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Added to selected meals')),
+    );
+    return;
   }
+
+  // ===== REMOVE =====
+  if (result == 'removed') {
+    await main.removeSelectedMeal(meal);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Removed from selected meals')),
+    );
+    return;
+  }
+
+  // ===== EDIT (optional) =====
+  if (result == 'updated') {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Selection updated')),
+    );
+  }
+}
+
 }

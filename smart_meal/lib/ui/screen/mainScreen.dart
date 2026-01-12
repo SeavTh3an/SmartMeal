@@ -3,6 +3,7 @@ import 'package:uuid/uuid.dart';
 import 'package:smart_meal/model/meal.dart';
 import 'package:smart_meal/model/selectedMeal.dart';
 import '../../data/selected_meal_storage.dart';
+import '../../data/meal_loader.dart';
 import 'homeScreen.dart';
 import 'listfoodScreen.dart';
 import 'addfoodScreen.dart';
@@ -47,7 +48,21 @@ class _MainScreenState extends State<MainScreen> {
         await SelectedMealStorage.loadSelectedMealEntries();
     selectedMealEntries.clear();
     selectedMealEntries.addAll(entries);
-    // Note: selectedMeals (Meal objects) will be filled as meals are selected or left empty; UI checks use selectedMealEntries
+
+    // Reconstruct selected Meal objects from the saved mealIds so Selected screen can display them
+    try {
+      final allMeals = await MealLoader.loadMeals();
+      selectedMeals.clear();
+      final ids = selectedMealEntries.map((e) => e.mealId).toSet();
+      for (final id in ids) {
+        final match = allMeals.where((m) => m.id == id);
+        if (match.isNotEmpty) selectedMeals.add(match.first);
+      }
+    } catch (e) {
+      // if meals can't be loaded for any reason, leave selectedMeals as-is
+      debugPrint('Warning: could not rebuild selectedMeals: $e');
+    }
+
     selectedFoodKey.currentState?.refresh();
   }
 
@@ -100,6 +115,7 @@ class _MainScreenState extends State<MainScreen> {
       );
       selectedMealEntries.add(entry);
     }
+    
 
     // ensure the meal object is in the selectedMeals list for compatibility with existing code
     addSelectedMeal(meal);
@@ -108,14 +124,20 @@ class _MainScreenState extends State<MainScreen> {
     selectedFoodKey.currentState?.refresh();
   }
 
-  void removeSelectedMeal(Meal meal) {
-    if (selectedMeals.contains(meal)) {
-      selectedMeals.remove(meal);
+  Future<void> removeSelectedMeal(Meal meal) async {
+    try {
+      if (selectedMeals.contains(meal)) {
+        selectedMeals.remove(meal);
+      }
+      // also remove any selected entries for this meal
+      selectedMealEntries.removeWhere((e) => e.mealId == meal.id);
+      await _saveSelectedEntries();
+      selectedFoodKey.currentState?.refresh();
+    } catch (e, st) {
+      debugPrint('Error in removeSelectedMeal: $e');
+      debugPrint('$st');
+      rethrow;
     }
-    // also remove any selected entries for this meal
-    selectedMealEntries.removeWhere((e) => e.mealId == meal.id);
-    _saveSelectedEntries();
-    selectedFoodKey.currentState?.refresh();
   }
 
   /// Remove specific meal-time entries for a meal; if none remain, also unmark the meal
