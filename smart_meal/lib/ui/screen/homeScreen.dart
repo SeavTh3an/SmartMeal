@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import '../../model/dailyLog.dart';
@@ -14,6 +13,7 @@ import '../widget/home/homeToggleTab.dart'; // <-- import the enum from here
 
 import '../../data/meal_loader.dart';
 import '../../data/meal_storagedata.dart'; // optional (for user-created meals)
+import '../../data/nutrition_tracker.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -24,13 +24,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   HomeView _view = HomeView.today;
-
   bool _loading = true;
   Map<String, Meal> _mealsById = {};
   List<SelectedMeal> _selectedMeals = [];
-
   late DailyLog _todayLog;
   late List<DailyLog> _weeklyLogs;
+  final NutritionTracker _nutritionTracker = NutritionTracker();
 
   @override
   void initState() {
@@ -118,7 +117,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     );
   }
 
-  
   List<DailyLog> _buildWeeklyLogs(
     DateTime endDate,
     List<SelectedMeal> selections,
@@ -136,47 +134,69 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     return out;
   }
 
-
   @override
   Widget build(BuildContext context) {
     if (_loading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: _pullToRefresh,
-        child: ListView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          children: [
-            HomeHeader(
-              title: 'Your Nutrition Overview',
-              imagePath: 'assets/image/western_img/salad_header.png',
-            ),
-            const SizedBox(height: 12),
-
-            // Toggle: Today / Weekly
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: HomeToggleTab(
-                current: _view,
-                onChanged: (v) => setState(() => _view = v),
+        child: ValueListenableBuilder<List<Meal>>(
+          valueListenable: _nutritionTracker.selectedMealsNotifier,
+          builder: (context, selectedMeals, _) {
+            // Calculate today's nutrition from selectedMeals
+            final today = DateTime.now();
+            double c = 0, p = 0, s = 0, f = 0;
+            bool veg = false;
+            for (final meal in selectedMeals) {
+              final n = meal.nutrition;
+              if (n == null) continue;
+              c += n.calories;
+              p += n.protein;
+              s += n.sugar;
+              f += n.fat;
+              veg = veg || n.vegetables;
+            }
+            final todayLog = DailyLog(
+              date: today,
+              total: Nutrition(
+                calories: c,
+                protein: p,
+                sugar: s,
+                fat: f,
+                vegetables: veg,
               ),
-            ),
-            const SizedBox(height: 12),
-
-            if (_view == HomeView.today) ...[
-              TodaySummaryCard(log: _todayLog),  // now shows numbers
-              const SizedBox(height: 12),
-              TodayWarningCard(log: _todayLog),
-            ] else ...[
-              WeeklySummary(weeklyLogs: _weeklyLogs), // compact weekly view
-            ],
-
-            const SizedBox(height: 24),
-          ],
+            );
+            return ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              children: [
+                HomeHeader(
+                  title: 'Your Nutrition Overview',
+                  imagePath: 'assets/image/western_img/salad_header.png',
+                ),
+                const SizedBox(height: 12),
+                // Toggle: Today / Weekly
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: HomeToggleTab(
+                    current: _view,
+                    onChanged: (v) => setState(() => _view = v),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                if (_view == HomeView.today) ...[
+                  TodaySummaryCard(log: todayLog),
+                  const SizedBox(height: 12),
+                  TodayWarningCard(log: todayLog),
+                ] else ...[
+                  WeeklySummary(weeklyLogs: _weeklyLogs),
+                ],
+                const SizedBox(height: 24),
+              ],
+            );
+          },
         ),
       ),
     );

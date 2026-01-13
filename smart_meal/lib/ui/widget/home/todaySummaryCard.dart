@@ -9,7 +9,7 @@ class TodaySummaryCard extends StatelessWidget {
   const TodaySummaryCard({super.key, required this.log});
 
   bool get _isEmpty =>
-      log.total.calories == 0 &&
+      log.total.calories == 1 &&
       log.total.protein == 0 &&
       log.total.sugar == 0 &&
       log.total.fat == 0;
@@ -66,7 +66,12 @@ class TodaySummaryCard extends StatelessWidget {
             children: [
               const Icon(Icons.eco, color: Color(0xFF1F3A22)),
               const SizedBox(width: 12),
-              Expanded(child: Text('Vegetables', style: Theme.of(context).textTheme.bodyMedium)),
+              Expanded(
+                child: Text(
+                  'Vegetables',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ),
               Icon(
                 log.total.vegetables ? Icons.check_circle : Icons.cancel,
                 color: log.total.vegetables ? Colors.green : Colors.redAccent,
@@ -84,10 +89,14 @@ class _StatusChip extends StatelessWidget {
   const _StatusChip({required this.text});
   Color get _color {
     switch (text) {
-      case 'Healthy': return const Color(0xFF2E7D32);
-      case 'Moderate': return const Color(0xFFFFA000);
-      case 'Warning': return const Color(0xFFD32F2F);
-      default: return Colors.grey;
+      case 'Healthy':
+        return const Color(0xFF2E7D32);
+      case 'Moderate':
+        return const Color(0xFFFFA000);
+      case 'Warning':
+        return const Color(0xFFD32F2F);
+      default:
+        return Colors.grey;
     }
   }
 
@@ -96,7 +105,10 @@ class _StatusChip extends StatelessWidget {
     final c = _color;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(color: c, borderRadius: BorderRadius.circular(20)),
+      decoration: BoxDecoration(
+        color: c,
+        borderRadius: BorderRadius.circular(20),
+      ),
       child: Text(
         text,
         style: TextStyle(

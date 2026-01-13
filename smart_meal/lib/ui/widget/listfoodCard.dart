@@ -3,6 +3,7 @@ import 'package:smart_meal/model/selectedMeal.dart';
 import '../../model/meal.dart';
 import '../screen/mealDetail.dart';
 import '../screen/mainScreen.dart';
+import '../../data/nutrition_tracker.dart';
 
 class ListfoodCard extends StatelessWidget {
   final List<Meal> meals;
@@ -138,45 +139,46 @@ class ListfoodCard extends StatelessWidget {
   }
 
   void _showMealDetail(BuildContext context, Meal meal) async {
-  final result = await Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (_) => MealDetailScreen(
-        meal: meal,
-        isSelected: MainScreen.of(context).isMealSelected(meal),
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => MealDetailScreen(
+          meal: meal,
+          isSelected: MainScreen.of(context).isMealSelected(meal),
+        ),
       ),
-    ),
-  );
-
-  final main = MainScreen.of(context);
-
-  // ===== ADD =====
-  if (result is List<MealTime>) {
-    await main.addSelectedMealEntriesForMeal(meal, result);
-    main.changeTab(3);
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Added to selected meals')),
     );
-    return;
+
+    final main = MainScreen.of(context);
+
+    // ===== ADD =====
+    if (result is List<MealTime>) {
+      await main.addSelectedMealEntriesForMeal(meal, result);
+      NutritionTracker().addMeal(meal); // <-- Track nutrition
+      main.changeTab(3);
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Added to selected meals')));
+      return;
+    }
+
+    // ===== REMOVE =====
+    if (result == 'removed') {
+      await main.removeSelectedMeal(meal);
+      NutritionTracker().removeMeal(meal); // <-- Track nutrition
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Removed from selected meals')),
+      );
+      return;
+    }
+
+    // ===== EDIT (optional) =====
+    if (result == 'updated') {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Selection updated')));
+    }
   }
-
-  // ===== REMOVE =====
-  if (result == 'removed') {
-    await main.removeSelectedMeal(meal);
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Removed from selected meals')),
-    );
-    return;
-  }
-
-  // ===== EDIT (optional) =====
-  if (result == 'updated') {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Selection updated')),
-    );
-  }
-}
-
 }

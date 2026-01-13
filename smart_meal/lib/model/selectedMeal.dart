@@ -3,7 +3,7 @@ enum MealTime { breakfast, lunch, dinner }
 
 class SelectedMeal {
   final String id;
-  final String mealId; // use String to match common Meal.id; change if your Meal.id is int
+  final String mealId; 
   final MealTime mealTime;
   final DateTime date;
 

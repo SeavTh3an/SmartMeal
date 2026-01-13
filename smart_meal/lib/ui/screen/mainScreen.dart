@@ -43,6 +43,8 @@ class _MainScreenState extends State<MainScreen> {
     _loadSelectedEntries();
   }
 
+  //since the selectted mealentries are stored separately from the meal obeject
+  //so we have to convert it from meali to a meal object
   Future<void> _loadSelectedEntries() async {
     final List<SelectedMeal> entries =
         await SelectedMealStorage.loadSelectedMealEntries();
@@ -66,6 +68,7 @@ class _MainScreenState extends State<MainScreen> {
     selectedFoodKey.currentState?.refresh();
   }
 
+  //Saves the current selected meals + meal times to local storage.
   Future<void> _saveSelectedEntries() async {
     await SelectedMealStorage.saveSelectedMealEntries(selectedMealEntries);
   }
@@ -100,8 +103,8 @@ class _MainScreenState extends State<MainScreen> {
     Meal meal,
     List<MealTime> mealTimes,
   ) async {
-    if (mealTimes.isEmpty) return;
-    final uid = const Uuid();
+    if (mealTimes.isEmpty) return; 
+    final uid = const Uuid(); //avoid conflict when delete so selectedMeal id is unique
     for (final mt in mealTimes) {
       final exists = selectedMealEntries.any(
         (e) => e.mealId == meal.id && e.mealTime == mt,
@@ -115,7 +118,6 @@ class _MainScreenState extends State<MainScreen> {
       );
       selectedMealEntries.add(entry);
     }
-    
 
     // ensure the meal object is in the selectedMeals list for compatibility with existing code
     addSelectedMeal(meal);
@@ -169,7 +171,8 @@ class _MainScreenState extends State<MainScreen> {
       body: IndexedStack(
         index: _currentIndex,
         children: [
-          HomeScreen(),
+          // Wrap HomeScreen with a Builder to allow navigation and refresh
+          Builder(builder: (context) => HomeScreenWrapper()),
           ListFoodScreen(key: listFoodKey, initialCategory: selectedCategory),
           AddFoodScreen(), // calls addNewMealToList
           SelectedFoodScreen(key: selectedFoodKey),
@@ -199,5 +202,35 @@ class _MainScreenState extends State<MainScreen> {
         ],
       ),
     );
+  }
+}
+
+/// Wrapper for HomeScreen to reload when returning from meal selection
+class HomeScreenWrapper extends StatefulWidget {
+  @override
+  State<HomeScreenWrapper> createState() => _HomeScreenWrapperState();
+}
+
+class _HomeScreenWrapperState extends State<HomeScreenWrapper> {
+  bool _refresh = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Listen for navigation pop with result
+    Future.microtask(() async {
+      final result = await Navigator.of(context).maybePop();
+      if (result == true) {
+        setState(() {
+          _refresh = !_refresh;
+        });
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Use _refresh in key to force rebuild
+    return HomeScreen(key: ValueKey(_refresh));
   }
 }
