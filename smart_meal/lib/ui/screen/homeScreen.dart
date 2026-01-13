@@ -173,7 +173,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               physics: const AlwaysScrollableScrollPhysics(),
               children: [
                 HomeHeader(
-                  title: 'Your Nutrition Overview',
+                  title: 'Nutrition Overview',
                   imagePath: 'assets/image/western_img/salad_header.png',
                 ),
                 const SizedBox(height: 12),
