@@ -191,7 +191,25 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   const SizedBox(height: 12),
                   TodayWarningCard(log: todayLog),
                 ] else ...[
-                  WeeklySummary(weeklyLogs: _weeklyLogs),
+                  // Recalculate weekly logs from selectedMeals
+                  WeeklySummary(
+                    weeklyLogs: _buildWeeklyLogs(
+                      DateTime.now(),
+                      // Simulate SelectedMeal list from selectedMeals (today all selected)
+                      selectedMeals
+                          .map(
+                            (meal) => SelectedMeal(
+                              id: meal.id + DateTime.now().toIso8601String(),
+                              mealId: meal.id,
+                              mealTime:
+                                  MealTime.lunch, // Default or change as needed
+                              date: DateTime.now(),
+                            ),
+                          )
+                          .toList(),
+                      {for (final m in selectedMeals) m.id: m},
+                    ),
+                  ),
                 ],
                 const SizedBox(height: 24),
               ],
