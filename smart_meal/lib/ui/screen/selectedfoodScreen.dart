@@ -6,7 +6,6 @@ import '../widget/topNavigation.dart';
 import '../widget/categoryCard.dart';
 import '../widget/listfoodCard.dart';
 import 'mainScreen.dart';
-import 'listfoodScreen.dart';
 
 class SelectedFoodScreen extends StatefulWidget {
   const SelectedFoodScreen({super.key});
@@ -16,32 +15,36 @@ class SelectedFoodScreen extends StatefulWidget {
 }
 
 class SelectedFoodScreenState extends State<SelectedFoodScreen> {
-  Category? selectedCategory;
-  List<Meal> allMeals = [];
-  List<Meal> filteredMeals = [];
+  Category? selectedCategory; // Currently selected category filter
+  List<Meal> allMeals = []; // All meals loaded from MainScreen
+  List<Meal> filteredMeals = []; // Meals filtered by selected category
 
-  // New: selected entries and grouping by meal time
-  List<SelectedMeal> selectedEntries = [];
-  List<Meal> breakfastMeals = [];
-  List<Meal> lunchMeals = [];
-  List<Meal> dinnerMeals = [];
+  List<SelectedMeal> selectedEntries = []; // Meals selected for today
+  List<Meal> breakfastMeals = []; // Select breakfast 
+  List<Meal> lunchMeals = []; // Select lunch 
+  List<Meal> dinnerMeals = []; // Select dinner 
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+
+    // Load meals and selected entries from MainScreen
     allMeals = MainScreen.of(context).selectedMealsList;
     selectedEntries = MainScreen.of(context).selectedMealEntriesList;
-    _applyFilter();
-    setState(() {});
+
+    _applyFilter(); // Apply category filter and group meals by mealTime
+    setState(() {}); // Update UI
   }
 
+  // Method to refresh the meals and selected entries
   void refresh() {
     allMeals = MainScreen.of(context).selectedMealsList;
     selectedEntries = MainScreen.of(context).selectedMealEntriesList;
-    _applyFilter();
-    setState(() {});
+    _applyFilter(); // Re-apply filter after refresh
+    setState(() {}); // Update UI
   }
 
+  // Open the top menu (bottom sheet)
   void _openTopMenu() {
     showModalBottomSheet(
       context: context,
@@ -51,31 +54,36 @@ class SelectedFoodScreenState extends State<SelectedFoodScreen> {
       builder: (_) => TopMenuSheet(
         currentIndex: 3,
         onSelected: (index) {
-          MainScreen.of(context).changeTab(index);
+          MainScreen.of(context).changeTab(index); // Switch tab on selection
         },
       ),
     );
   }
 
+  // Called when a category is tapped
   void _onCategoryTap(Category? category) {
     setState(() {
-      selectedCategory = category;
-      _applyFilter();
+      selectedCategory = category; // Update selected category
+      _applyFilter(); // Apply the filter for this category
     });
   }
 
+  // Apply filter and group meals by breakfast, lunch, dinner
   void _applyFilter() {
-    // Map selected entries to Meal objects and split by mealTime
     breakfastMeals = [];
     lunchMeals = [];
     dinnerMeals = [];
 
+    //Map selected entries to Meal objects and group by mealTime
     for (final entry in selectedEntries) {
       final matched = allMeals.where((m) => m.id == entry.mealId);
       if (matched.isEmpty) continue;
       final meal = matched.first;
-      if (selectedCategory != null && meal.category != selectedCategory)
-        continue;
+
+      // Skip if meal doesn't match the selected category
+      if (selectedCategory != null && meal.category != selectedCategory) continue;
+
+      // Group meals by mealTime
       switch (entry.mealTime) {
         case MealTime.breakfast:
           if (!breakfastMeals.contains(meal)) breakfastMeals.add(meal);
@@ -89,13 +97,12 @@ class SelectedFoodScreenState extends State<SelectedFoodScreen> {
       }
     }
 
-    // Also maintain filteredMeals for compatibility (all selected meals filtered by category)
+    //Maintain filteredMeals for consistency
     if (selectedCategory == null) {
       filteredMeals = allMeals;
     } else {
-      filteredMeals = allMeals
-          .where((meal) => meal.category == selectedCategory)
-          .toList();
+      filteredMeals =
+          allMeals.where((meal) => meal.category == selectedCategory).toList();
     }
   }
 
@@ -104,6 +111,7 @@ class SelectedFoodScreenState extends State<SelectedFoodScreen> {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
+          // Header with title and menu button
           SliverToBoxAdapter(
             child: CurvedHeader(
               onMenuTap: _openTopMenu,
@@ -111,6 +119,7 @@ class SelectedFoodScreenState extends State<SelectedFoodScreen> {
             ),
           ),
 
+          // Category selector
           SliverToBoxAdapter(
             child: SizedBox(
               height: 90,
@@ -154,6 +163,7 @@ class SelectedFoodScreenState extends State<SelectedFoodScreen> {
             ),
           ),
 
+          // Title for selected meals
           const SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
@@ -164,6 +174,7 @@ class SelectedFoodScreenState extends State<SelectedFoodScreen> {
             ),
           ),
 
+          // List of meals grouped by mealTime
           SliverPadding(
             padding: const EdgeInsets.only(bottom: 16),
             sliver: SliverToBoxAdapter(
@@ -180,7 +191,7 @@ class SelectedFoodScreenState extends State<SelectedFoodScreen> {
                   : Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Breakfast
+                        // Breakfast section
                         const Padding(
                           padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
                           child: Text(
@@ -196,9 +207,7 @@ class SelectedFoodScreenState extends State<SelectedFoodScreen> {
                           child: breakfastMeals.isEmpty
                               ? const Padding(
                                   padding: EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 8,
-                                  ),
+                                      horizontal: 16, vertical: 8),
                                   child: Text(
                                     'No breakfast selected',
                                     style: TextStyle(color: Colors.grey),
@@ -207,7 +216,7 @@ class SelectedFoodScreenState extends State<SelectedFoodScreen> {
                               : ListfoodCard(meals: breakfastMeals),
                         ),
 
-                        // Lunch
+                        // Lunch section
                         const Padding(
                           padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
                           child: Text(
@@ -223,9 +232,7 @@ class SelectedFoodScreenState extends State<SelectedFoodScreen> {
                           child: lunchMeals.isEmpty
                               ? const Padding(
                                   padding: EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 8,
-                                  ),
+                                      horizontal: 16, vertical: 8),
                                   child: Text(
                                     'No lunch selected',
                                     style: TextStyle(color: Colors.grey),
@@ -234,7 +241,7 @@ class SelectedFoodScreenState extends State<SelectedFoodScreen> {
                               : ListfoodCard(meals: lunchMeals),
                         ),
 
-                        // Dinner
+                        // Dinner section
                         const Padding(
                           padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
                           child: Text(
@@ -250,9 +257,7 @@ class SelectedFoodScreenState extends State<SelectedFoodScreen> {
                           child: dinnerMeals.isEmpty
                               ? const Padding(
                                   padding: EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 8,
-                                  ),
+                                      horizontal: 16, vertical: 8),
                                   child: Text(
                                     'No dinner selected',
                                     style: TextStyle(color: Colors.grey),

@@ -51,7 +51,7 @@ class _AddFoodScreenState extends State<AddFoodScreen> {
             .where((e) => e.isNotEmpty)
             .toList(),
         cookingInstructions: _instructionsController.text.trim(),
-        isUserCreated: true, // <-- important
+        isUserCreated: true, 
       );
 
 

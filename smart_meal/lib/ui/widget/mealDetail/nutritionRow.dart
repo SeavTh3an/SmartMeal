@@ -1,11 +1,10 @@
-
 import 'package:flutter/material.dart';
 
 class NutritionRow extends StatelessWidget {
   final String label;
-  final String? levelText;    // low medium high
+  final String? levelText;    
   final IconData icon;
-  final bool? booleanValue;   // vegetable: yes/no
+  final bool? booleanValue;   
 
   const NutritionRow({
     super.key,
@@ -22,21 +21,16 @@ class NutritionRow extends StatelessWidget {
     'fats',
   };
 
-  // Nutrients where HIGH is considered good
-  static const Set<String> _highIsGood = {
-    'protein',
-    'vegetable',
-  };
 
   // Color mapping for levels for "high is BAD"
   Color _colorForLevelHighBad(String? level) {
     switch ((level ?? '').toLowerCase().trim()) {
       case 'high':
-        return const Color(0xFFD32F2F); // red
+        return const Color(0xFFD32F2F); 
       case 'medium':
-        return const Color(0xFFFFA000); // orange/amber
+        return const Color(0xFFFFA000); 
       case 'low':
-        return const Color(0xFF2E7D32); // green
+        return const Color(0xFF2E7D32); 
       default:
         return Colors.grey;
     }

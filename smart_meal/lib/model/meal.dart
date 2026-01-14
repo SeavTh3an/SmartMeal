@@ -31,7 +31,7 @@ class Meal {
   final String cookingInstructions;
   final bool isUserCreated;
 
-  // ---------- ID GENERATION ----------
+  //id generator
   static String generateDisplayID(Category category) {
     _categoryCounter[category] = (_categoryCounter[category] ?? 0) + 1;
     final count = _categoryCounter[category]!;
@@ -69,7 +69,6 @@ class Meal {
   }
 
   String get healthLabel {
-    final value = (healthScore * 10).toStringAsFixed(1);
 
     if (healthScore < 0.4) {
       return "Less healthy ";

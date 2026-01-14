@@ -109,13 +109,13 @@ class WeeklyChart extends StatelessWidget {
   }
 
   List<BarChartGroupData> _barGroups() {
-    // Grouped bars: two rods per day (protein + sugar)
+    // Grouped bars: two rods per day protein and sugar
     return logs.asMap().entries.map((entry) {
       final index = entry.key;
       final n = entry.value.total;
       return BarChartGroupData(
         x: index,
-        barsSpace: 8, // spacing between rods
+        barsSpace: 8,
         barRods: [
           BarChartRodData(
             toY: n.protein,

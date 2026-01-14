@@ -17,14 +17,10 @@ class MealLoader {
 
     final jsonMeals = jsonList.map((json) => Meal.fromJson(json)).toList();
 
-    //combine JSON meals + runtime meals
-    return [...jsonMeals, ..._runtimeMeals];
+    //combine JSON meals 
+    return [...jsonMeals, ];
   }
 
-  //add meal temporarily
-  static void addMeal(Meal meal) {
-    _runtimeMeals.add(meal);
-  }
 
   static const _kSelectedMealsKey = 'selected_meals';
 

@@ -5,7 +5,7 @@ import 'recommendation.dart';
 class DailyLog {
   final DateTime date;
   final Nutrition total;
-  final List<Meal> meals; // <-- keep selected meals
+  final List<Meal> meals; //Keep seleccted meals of the day
 
   const DailyLog({
     required this.date,
@@ -17,6 +17,7 @@ class DailyLog {
     double calories = 0, protein = 0, sugar = 0, fat = 0;
     bool vegetables = false;
 
+    // Sum nutrition from all selected meals
     for (final m in selectedMeals) {
       calories += m.nutrition.calories;
       protein += m.nutrition.protein;
@@ -38,12 +39,12 @@ class DailyLog {
     );
   }
 
-  // --- Warnings ---
+  // Warning checks
   bool get isCaloriesHigh => total.calories > Recommendation.calories;
   bool get isSugarHigh    => total.sugar > Recommendation.sugar;
   bool get isFatHigh      => total.fat > Recommendation.fat;
 
-  // --- Status ---
+  // Status summary
   String get status {
     if (isCaloriesHigh || isSugarHigh || isFatHigh) return 'Warning';
 
@@ -56,7 +57,7 @@ class DailyLog {
     return 'Healthy';
   }
 
-  // --- Daily Suggestions ---
+  // Daily Suggestions
   List<String> suggestions() {
     final tips = <String>[];
 
@@ -70,7 +71,7 @@ class DailyLog {
     return tips;
   }
 
-  // --- Weekly aggregation ---
+  // Weekly Total Nutrition
   static Nutrition weeklyTotal(List<DailyLog> logs) {
     double c = 0, p = 0, s = 0, f = 0;
     bool veg = false;
@@ -93,7 +94,7 @@ class DailyLog {
   }
 }
 
-// --- Weekly Suggestions ---
+// weekly suggestions extension
 extension WeeklySuggestions on List<DailyLog> {
   List<String> suggestions() {
     final total = DailyLog.weeklyTotal(this);

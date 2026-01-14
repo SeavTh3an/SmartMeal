@@ -7,7 +7,7 @@ import '../../theme/weekColor.dart';
 
 class WeeklySummary extends StatefulWidget {
   final List<DailyLog> weeklyLogs;
-  final bool showChart; // keep chart + overview + warnings + suggestions
+  final bool showChart; // chart,overview,warning,suggestion
   const WeeklySummary({super.key, required this.weeklyLogs, this.showChart = true});
 
   @override
@@ -62,7 +62,7 @@ class _WeeklySummaryState extends State<WeeklySummary> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Totals tiles (icon & label colored by nutrient color)
+              // Totals tiles 
               Wrap(
                 spacing: 12,
                 runSpacing: 12,
@@ -98,7 +98,7 @@ class _WeeklySummaryState extends State<WeeklySummary> {
               const Divider(height: 1),
               const SizedBox(height: 12),
 
-              // Warnings & Suggestions (always shown)
+              // Warnings & Suggestions 
               Wrap(
                 spacing: 8,
                 runSpacing: 8,
@@ -148,7 +148,7 @@ class _WeeklySummaryState extends State<WeeklySummary> {
                         padding: const EdgeInsets.only(top: 8),
                         child: Column(
                           children: logs.map((d) {
-                            final wdIndex = d.date.weekday; // Mon=1..Sun=7
+                            final wdIndex = d.date.weekday; // Mon=1 n Sun=7
                             final wdLabel = const ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][wdIndex - 1];
                             final dayTint = WeekColors.weekdayTint(wdIndex);
 
@@ -169,7 +169,7 @@ class _WeeklySummaryState extends State<WeeklySummary> {
                               ),
                               child: Row(
                                 children: [
-                                  // Day name pill (no calendar icon), tinted by weekday color
+                                  // Day name 
                                   Container(
                                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                                     decoration: BoxDecoration(
@@ -184,7 +184,7 @@ class _WeeklySummaryState extends State<WeeklySummary> {
 
                                   const SizedBox(width: 12),
 
-                                  // Nutrients (icon + text tinted by nutrient colors)
+                                  // Nutrients 
                                   Expanded(
                                     child: Wrap(
                                       spacing: 12,
@@ -215,8 +215,6 @@ class _WeeklySummaryState extends State<WeeklySummary> {
     );
   }
 
-  // --- UI Helpers ---
-
   Widget _statTile({
     required IconData icon,
     required String label,
@@ -224,7 +222,7 @@ class _WeeklySummaryState extends State<WeeklySummary> {
     required Color color,
   }) {
     return Container(
-      width: 180,
+      width: 150,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       decoration: BoxDecoration(
         color: Colors.white,

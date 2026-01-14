@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_meal/model/nutrition.dart';
 import '../../../model/meal.dart';
 import 'nutritionRow.dart';
-import 'package:uuid/uuid.dart';
-import '../../../data/meal_loader.dart';
-import '../../../model/selectedMeal.dart';
+
 
 class MealDetailWidget extends StatefulWidget {
   final Meal meal;
@@ -320,7 +318,6 @@ class _SectionCard extends StatelessWidget {
   final Color borderColor;
 
   const _SectionCard({
-    super.key,
     required this.child,
     required this.background,
     required this.borderColor,

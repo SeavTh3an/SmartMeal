@@ -5,6 +5,7 @@ import '../model/meal.dart';
 class MealStorage {
   static const String _key = 'user_meals';
 
+  // Load meals from SharedPreferences
   static Future<List<Meal>> loadUserMeals() async {
     final prefs = await SharedPreferences.getInstance();
     final jsonString = prefs.getString(_key);
@@ -15,6 +16,7 @@ class MealStorage {
     return data.map((e) => Meal.fromJson(e)).toList();
   }
 
+  // Save meals to SharedPreferences
   static Future<void> saveUserMeals(List<Meal> meals) async {
     final prefs = await SharedPreferences.getInstance();
     final jsonString =

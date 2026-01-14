@@ -92,11 +92,6 @@ class ListFoodScreenState extends State<ListFoodScreen> {
   await MealStorage.saveUserMeals(userMeals);
 }
 
-  // void refreshMeals() {
-  //   setState(() {
-  //     _applyFilter();
-  //   });
-  // }
 
   void _openTopMenu() {
     showModalBottomSheet(

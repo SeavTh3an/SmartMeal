@@ -4,7 +4,6 @@ import '../../model/meal.dart';
 import '../../model/selectedMeal.dart';
 import '../widget/mealDetail/mealDetailWidget.dart';
 import '../widget/mealDetail/dialog.dart';
-import 'mainScreen.dart';
 import '../widget/mealDetail/removedialog.dart';
 
 class MealDetailScreen extends StatelessWidget {
@@ -28,7 +27,7 @@ class MealDetailScreen extends StatelessWidget {
         onCancel: () => Navigator.pop(context),
 
         onToggleSelected: (nextSelected) async {
-          // ===== SELECT =====
+          //select
           if (nextSelected) {
             final List<MealTime>? picked =
                 await showDialog<List<MealTime>>(
@@ -43,8 +42,6 @@ class MealDetailScreen extends StatelessWidget {
             return;
           }
 
-          // ===== UNSELECT =====
-          // UNSELECT
 final action = await showRemoveMealSheet(context);
 
 if (action == 'remove') {

@@ -44,7 +44,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   //since the selectted mealentries are stored separately from the meal obeject
-  //so we have to convert it from meali to a meal object
+  //so we have to convert it from mealid to a meal object
   Future<void> _loadSelectedEntries() async {
     final List<SelectedMeal> entries =
         await SelectedMealStorage.loadSelectedMealEntries();
@@ -61,7 +61,7 @@ class _MainScreenState extends State<MainScreen> {
         if (match.isNotEmpty) selectedMeals.add(match.first);
       }
     } catch (e) {
-      // if meals can't be loaded for any reason, leave selectedMeals as-is
+      // if meals can't be load for any reason, leave selectedMeals as it is
       debugPrint('Warning: could not rebuild selectedMeals: $e');
     }
 
@@ -98,7 +98,7 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
-  /// Add one or multiple SelectedMeal entries for a meal (preserves meal object in selectedMeals)
+  // Add one or multiple SelectedMeal entries for a meal
   Future<void> addSelectedMealEntriesForMeal(
     Meal meal,
     List<MealTime> mealTimes,
@@ -119,7 +119,7 @@ class _MainScreenState extends State<MainScreen> {
       selectedMealEntries.add(entry);
     }
 
-    // ensure the meal object is in the selectedMeals list for compatibility with existing code
+    // make sure the meal object is in the selectedMeals list 
     addSelectedMeal(meal);
 
     await _saveSelectedEntries();
@@ -142,7 +142,7 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
-  /// Remove specific meal-time entries for a meal; if none remain, also unmark the meal
+  // Remove specific meal time entries for a meal; if nth remain, also unmark the meal
   void removeSelectedMealEntriesForMealTimes(Meal meal, List<MealTime> times) {
     if (times.isEmpty) return;
     selectedMealEntries.removeWhere(
@@ -153,7 +153,7 @@ class _MainScreenState extends State<MainScreen> {
       (e) => e.mealId == meal.id,
     );
     if (remainingForMeal.isEmpty) {
-      // no more times selected for this meal -> remove meal from selectedMeals
+      // no more time selected for this meal, remove meal from selectedMeals
       selectedMeals.remove(meal);
     }
 
@@ -205,7 +205,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 }
 
-/// Wrapper for HomeScreen to reload when returning from meal selection
+// Wrapper for HomeScreen to reload when returning from meal selection
 class HomeScreenWrapper extends StatefulWidget {
   @override
   State<HomeScreenWrapper> createState() => _HomeScreenWrapperState();

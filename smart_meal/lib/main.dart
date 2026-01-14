@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'ui/screen/welcomeScreen.dart';
 import 'ui/screen/mainScreen.dart';
-import 'ui/screen/mealDetail.dart';
+
 
 void main() {
   runApp(const MyApp());
